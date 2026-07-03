@@ -2,6 +2,7 @@
 import Card from './Card.vue'
 import Callout from './Callout.vue'
 import BadgeRow from './BadgeRow.vue'
+import Note from './Note.vue'
 </script>
 
 <template>
@@ -15,9 +16,9 @@ import BadgeRow from './BadgeRow.vue'
       <Card>
         <h3>1 &middot; Experimental data</h3>
         <Callout>Read-to-sequence preprocessing.</Callout>
-        <h3>In vitro</h3>
+        <p class="pipeline-subhead">In vitro</p>
         <BadgeRow :items="['HT-SELEX', 'DAP-seq']" />
-        <h3>In vivo</h3>
+        <p class="pipeline-subhead">In vivo</p>
         <BadgeRow :items="['ChIP-seq', 'CUT&amp;Tag']" />
       </Card>
 
@@ -28,17 +29,16 @@ import BadgeRow from './BadgeRow.vue'
 
       <Card>
         <h3>2 &middot; <em>de novo</em> motif discovery</h3>
-        <Callout type="warn">Search for overrepresented sequence patterns.</Callout>
-        <h3>Tools</h3>
-        <div class="badge-row">
-          <span class="model-pill pwm">STREME</span>
-          <span class="model-pill pwm">MEME</span>
-          <span class="model-pill pwm">HOMER</span>
-          <span class="model-pill alt">BaMM</span>
-          <span class="model-pill alt">Slim</span>
-          <span class="model-pill alt">DIMONT</span>
-          <span class="model-pill alt">SiteGA</span>
-        </div>
+        <Callout>Search for overrepresented sequence patterns.</Callout>
+        <p class="pipeline-subhead">Tools</p>
+        <BadgeRow
+          variant="pwm"
+          :items="['STREME', 'MEME', 'HOMER']"
+        />
+        <BadgeRow
+          variant="alt"
+          :items="['BaMM', 'Slim', 'DIMONT', 'SiteGA']"
+        />
       </Card>
 
       <div class="pipeline-arrow">
@@ -48,18 +48,17 @@ import BadgeRow from './BadgeRow.vue'
 
       <Card>
         <h3>3 &middot; Annotation</h3>
-        <Callout type="good">Match the <em>de novo</em> motif to known motifs from HOCOMOCO, JASPAR or CIS-BP.</Callout>
-        <h3>Established tools</h3>
-        <div class="badge-row">
-          <span class="model-pill pwm">Tomtom</span>
-          <span class="model-pill pwm">STAMP</span>
-          <span class="model-pill pwm">MACRO-APE</span>
-        </div>
+        <Callout>Match the <em>de novo</em> motif to known motifs from HOCOMOCO, JASPAR or CIS-BP.</Callout>
+        <p class="pipeline-subhead">Established tools</p>
+                <BadgeRow
+          variant="pwm"
+          :items="['Tomtom', 'STAMP', 'MACRO-APE']"
+        />
       </Card>
     </div>
 
-    <Callout type="hot">
-      <strong>Key point:</strong> annotation tools exist for PWM motif models, but not for alternative motif models.
-    </Callout>
+    <Note>
+      Annotation tools exist for PWM motif models, but not for alternative motif models.
+    </Note>
   </div>
 </template>
