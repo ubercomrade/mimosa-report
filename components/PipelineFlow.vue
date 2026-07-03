@@ -1,46 +1,36 @@
 <script setup>
+import Card from './Card.vue'
 import Callout from './Callout.vue'
+import BadgeRow from './BadgeRow.vue'
 </script>
 
 <template>
-  <div class="pipeline-content">
-    <div class="badge-row">
+  <div class="pipeline-flow">
+    <div class="badge-row pipeline-legend">
       <span class="model-pill pwm">PWM motif model</span>
       <span class="model-pill alt">Alternative motif model</span>
     </div>
 
-    <div class="stage-flow">
-      <section class="stage">
-        <header class="stage-head">
-          <span class="stage-number">1</span>
-          <span class="stage-title">Experimental data</span>
-        </header>
+    <div class="pipeline-flow-row">
+      <Card>
+        <h3>1 &middot; Experimental data</h3>
         <Callout>Read-to-sequence preprocessing.</Callout>
         <h3>In vitro</h3>
-        <div class="pill-row">
-          <span class="pill">HT-SELEX</span>
-          <span class="pill">DAP-seq</span>
-        </div>
+        <BadgeRow :items="['HT-SELEX', 'DAP-seq']" />
         <h3>In vivo</h3>
-        <div class="pill-row">
-          <span class="pill">ChIP-seq</span>
-          <span class="pill">CUT&amp;Tag</span>
-        </div>
-      </section>
+        <BadgeRow :items="['ChIP-seq', 'CUT&amp;Tag']" />
+      </Card>
 
-      <div class="arrow-cell">
-        <span class="arrow-label">sequences</span>
+      <div class="pipeline-arrow">
+        <span class="pipeline-arrow-label">sequences</span>
         <span class="arrow">&rarr;</span>
       </div>
 
-      <section class="stage discovery">
-        <header class="stage-head">
-          <span class="stage-number">2</span>
-          <span class="stage-title"><em>de novo</em> motif discovery</span>
-        </header>
+      <Card>
+        <h3>2 &middot; <em>de novo</em> motif discovery</h3>
         <Callout type="warn">Search for overrepresented sequence patterns.</Callout>
         <h3>Tools</h3>
-        <div class="model-row">
+        <div class="badge-row">
           <span class="model-pill pwm">STREME</span>
           <span class="model-pill pwm">MEME</span>
           <span class="model-pill pwm">HOMER</span>
@@ -49,26 +39,23 @@ import Callout from './Callout.vue'
           <span class="model-pill alt">DIMONT</span>
           <span class="model-pill alt">SiteGA</span>
         </div>
-      </section>
+      </Card>
 
-      <div class="arrow-cell">
-        <span class="arrow-label">motifs</span>
+      <div class="pipeline-arrow">
+        <span class="pipeline-arrow-label">motifs</span>
         <span class="arrow">&rarr;</span>
       </div>
 
-      <section class="stage annotation">
-        <header class="stage-head">
-          <span class="stage-number">3</span>
-          <span class="stage-title">Annotation</span>
-        </header>
+      <Card>
+        <h3>3 &middot; Annotation</h3>
         <Callout type="good">Match the <em>de novo</em> motif to known motifs from HOCOMOCO, JASPAR or CIS-BP.</Callout>
         <h3>Established tools</h3>
-        <div class="model-row">
+        <div class="badge-row">
           <span class="model-pill pwm">Tomtom</span>
           <span class="model-pill pwm">STAMP</span>
           <span class="model-pill pwm">MACRO-APE</span>
         </div>
-      </section>
+      </Card>
     </div>
 
     <Callout type="hot">

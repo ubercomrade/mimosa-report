@@ -1,19 +1,38 @@
-/* Migrated from MIMOSA_BGRS_2026_reveal.html for Slidev. */
+/* Migrated from MIMOSA_BGRS_2026_reveal.html for Slidev.
+   Unified teal-based palette with harmonized muted semantic accents. */
 :root {
-  --bg: #f7f4ec;
+  --bg: #f5f8f7;
   --surface: #ffffff;
-  --surface-soft: #efe8dc;
-  --ink: #172026;
-  --muted: #5c6677;
-  --line: rgba(23, 32, 38, 0.16);
-  --cyan: #0b7f83;
-  --cyan-deep: #075f63;
-  --amber: #b56f00;
-  --green: #4f7d31;
-  --red: #b6453e;
+  --surface-soft: #e9efed;
+  --ink: #16252b;
+  --muted: #5a6b72;
+  --line: rgba(22, 37, 43, 0.14);
+  --shadow: rgba(22, 37, 43, 0.10);
+
+  --primary: #0b7f83;
+  --primary-deep: #075f63;
+  --primary-tint: rgba(11, 127, 131, 0.10);
+  --primary-tint-border: rgba(11, 127, 131, 0.22);
+
+  --good: #3a7a59;
+  --warn: #8a6328;
+  --hot: #9a4f48;
+  --good-tint: rgba(58, 122, 89, 0.10);
+  --warn-tint: rgba(138, 99, 40, 0.10);
+  --hot-tint: rgba(154, 79, 72, 0.10);
+
   --paper: #ffffff;
-  --paper-ink: #172026;
-  --shadow: rgba(27, 35, 43, 0.12);
+  --paper-ink: #16252b;
+
+  --pwm: #b6453e;
+  --pwm-deep: #81302b;
+  --pwm-tint: rgba(182, 69, 62, 0.11);
+  --pwm-tint-border: rgba(182, 69, 62, 0.26);
+  --alt: #2563a8;
+  --alt-deep: #1c4a7e;
+  --alt-tint: rgba(37, 99, 168, 0.11);
+  --alt-tint-border: rgba(37, 99, 168, 0.26);
+
   --heading-font: Georgia, "Times New Roman", serif;
   --body-font: Verdana, Helvetica, sans-serif;
   --text-size: 17pt;
@@ -59,6 +78,7 @@ body,
   font-weight: 700;
   letter-spacing: -0.02em;
   margin: 0 0 18px;
+  text-align: left;
   text-transform: none;
 }
 
@@ -74,7 +94,7 @@ body,
 }
 
 .slidev-layout h3 {
-  color: var(--cyan);
+  color: var(--primary);
   font-family: var(--body-font);
   font-size: var(--h3-size);
   font-weight: 800;
@@ -102,31 +122,31 @@ body,
 }
 
 .slidev-layout strong {
-  color: var(--cyan);
+  color: var(--primary);
   font-weight: 800;
 }
 
 .slidev-layout a {
-  color: var(--cyan);
+  color: var(--primary);
   text-decoration: none;
 }
 
 .slidev-layout a:hover {
-  color: var(--cyan-deep);
+  color: var(--primary-deep);
   text-decoration: underline;
 }
 
 .slidev-layout code {
-  background: rgba(181, 111, 0, 0.12);
-  border: 1px solid rgba(181, 111, 0, 0.22);
+  background: var(--primary-tint);
+  border: 1px solid var(--primary-tint-border);
   border-radius: 8px;
-  color: #744700;
+  color: var(--primary-deep);
   font-family: "Courier New", monospace;
   padding: 2px 7px;
 }
 
 .slidev-progress {
-  color: var(--cyan);
+  color: var(--primary);
 }
 
 .slidev-page-number {
@@ -140,7 +160,7 @@ body,
 }
 
 .slidev-controls {
-  color: var(--cyan);
+  color: var(--primary);
 }
 
 .deck-footer {
@@ -172,18 +192,12 @@ body,
   min-height: 0;
 }
 
-.pipeline-content {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  min-height: 0;
-}
-
 .title-slide {
   display: flex !important;
   flex-direction: column;
   justify-content: center;
   gap: 24px;
+  text-align: left;
 }
 
 .title-slide h1 {
@@ -202,6 +216,7 @@ body,
   flex-direction: column;
   justify-content: center;
   min-height: 100%;
+  text-align: left;
 }
 
 .section-divider h1 {
@@ -221,10 +236,11 @@ body,
 }
 
 .eyebrow {
-  color: var(--amber);
+  color: var(--primary-deep);
   font-size: 12pt;
   font-weight: 800;
   letter-spacing: 0.17em;
+  text-align: left;
   text-transform: uppercase;
 }
 
@@ -242,7 +258,7 @@ body,
 }
 
 .note {
-  border-left: 6px solid var(--cyan);
+  border-left: 6px solid var(--primary);
   color: var(--muted);
   font-size: 14pt;
   line-height: 1.32;
@@ -272,22 +288,22 @@ body,
 }
 
 .callout {
-  border-left: 8px solid var(--cyan);
+  border-left: 8px solid var(--primary);
 }
 
 .callout.good {
-  border-left-color: var(--green);
-  background: rgba(79, 125, 49, 0.1);
+  border-left-color: var(--good);
+  background: var(--good-tint);
 }
 
 .callout.warn {
-  border-left-color: var(--amber);
-  background: rgba(181, 111, 0, 0.1);
+  border-left-color: var(--warn);
+  background: var(--warn-tint);
 }
 
 .callout.hot {
-  border-left-color: var(--red);
-  background: rgba(182, 69, 62, 0.1);
+  border-left-color: var(--hot);
+  background: var(--hot-tint);
 }
 
 .grid-2,
@@ -350,124 +366,49 @@ body,
 }
 
 .caption {
-  color: #5c6677;
+  color: var(--muted);
   font-size: 11pt;
   margin-top: 8px;
   text-align: center;
 }
 
-.stage-flow {
+.pipeline-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 0;
+}
+
+.pipeline-flow-row {
   display: grid;
-  grid-template-columns: 1.05fr 0.34fr 1fr 0.34fr 1fr;
+  grid-template-columns: 1fr 0.3fr 1fr 0.3fr 1fr;
   gap: 12px;
   align-items: stretch;
 }
 
-.stage {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-top: 5px solid var(--cyan);
-  border-radius: 18px;
+.pipeline-flow .card {
   display: flex;
   flex-direction: column;
-  gap: 11px;
-  min-height: 324px;
-  padding: 16px;
-}
-
-.stage.discovery {
-  border-top-color: var(--amber);
-}
-
-.stage.annotation {
-  border-top-color: var(--green);
-}
-
-.stage-head {
-  align-items: center;
-  border-bottom: 1px solid var(--line);
-  display: flex;
   gap: 10px;
-  padding-bottom: 10px;
+  padding: 16px 18px;
 }
 
-.stage-number {
-  align-items: center;
-  background: var(--cyan);
-  border-radius: 50%;
-  color: #ffffff;
-  display: flex;
-  flex: 0 0 30px;
-  font-size: 13pt;
-  font-weight: 900;
-  height: 30px;
-  justify-content: center;
-  width: 30px;
+.pipeline-flow .card h3:first-child {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+  margin-bottom: 4px;
 }
 
-.stage.discovery .stage-number {
-  background: var(--amber);
-}
-
-.stage.annotation .stage-number {
-  background: var(--green);
-}
-
-.stage-title {
-  color: var(--ink);
-  font-size: 14pt;
-  font-weight: 800;
-  line-height: 1.15;
-}
-
-.pill-row,
-.model-row,
-.badge-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.pill,
-.model-pill,
-.badge {
-  border-radius: 999px;
-  display: inline-flex;
-  font-size: 11pt;
-  font-weight: 800;
-  line-height: 1;
-  padding: 7px 11px;
-  white-space: nowrap;
-}
-
-.pill {
-  background: var(--surface-soft);
-  border: 1px solid var(--line);
-  color: var(--ink);
-}
-
-.model-pill.pwm {
-  background: rgba(182, 69, 62, 0.11);
-  border: 1px solid rgba(182, 69, 62, 0.26);
-  color: #81302b;
-}
-
-.model-pill.alt {
-  background: rgba(11, 127, 131, 0.11);
-  border: 1px solid rgba(11, 127, 131, 0.28);
-  color: var(--cyan-deep);
-}
-
-.arrow-cell {
+.pipeline-arrow {
   align-items: center;
   color: var(--muted);
   display: flex;
   flex-direction: column;
-  justify-content: center;
   gap: 7px;
+  justify-content: center;
 }
 
-.arrow-label {
+.pipeline-arrow-label {
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: 11px;
@@ -479,10 +420,49 @@ body,
 }
 
 .arrow {
-  color: var(--cyan);
+  color: var(--primary);
   font-size: 32pt;
   font-weight: 800;
   line-height: 1;
+}
+
+.pipeline-legend {
+  gap: 10px;
+}
+
+.pipeline-legend .model-pill {
+  font-size: 12pt;
+  padding: 8px 13px;
+}
+
+.badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.badge,
+.model-pill,
+.pill {
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 11pt;
+  font-weight: 800;
+  line-height: 1;
+  padding: 7px 11px;
+  white-space: nowrap;
+}
+
+.badge {
+  background: var(--primary-tint);
+  border: 1px solid var(--primary-tint-border);
+  color: var(--primary-deep);
+}
+
+.pill {
+  background: var(--surface-soft);
+  border: 1px solid var(--line);
+  color: var(--ink);
 }
 
 .pipe {
@@ -523,7 +503,7 @@ body,
 }
 
 .slidev-layout .metric-value {
-  color: var(--amber);
+  color: var(--primary-deep);
   display: block;
   font-family: var(--heading-font);
   font-size: 27pt;
@@ -540,9 +520,9 @@ body,
 }
 
 .badge {
-  background: rgba(11, 127, 131, 0.11);
-  border: 1px solid rgba(11, 127, 131, 0.28);
-  color: var(--cyan-deep);
+  background: var(--primary-tint);
+  border: 1px solid var(--primary-tint-border);
+  color: var(--primary-deep);
 }
 
 .formula {
@@ -574,94 +554,76 @@ body,
   display: flex !important;
   flex-direction: column;
   justify-content: center;
-  text-align: center;
+  text-align: left;
 }
 
 .thank-you h1 {
   font-size: 58pt;
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .thank-you .subtitle,
 .thank-you .small {
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .compact-pipeline h2 {
   margin-bottom: 12px;
 }
 
-.compact-pipeline .content {
+.compact-pipeline .pipeline-flow {
   gap: 12px;
 }
 
-.compact-pipeline .badge-row {
-  gap: 6px;
-}
-
-.compact-pipeline .stage-flow {
+.compact-pipeline .pipeline-flow-row {
   grid-template-columns: 1fr 0.18fr 1.04fr 0.18fr 1fr;
   gap: 9px;
 }
 
-.compact-pipeline .stage {
+.compact-pipeline .pipeline-flow .card {
   border-radius: 16px;
   gap: 8px;
-  min-height: 0;
   padding: 12px 13px;
 }
 
-.compact-pipeline .stage-head {
-  gap: 8px;
-  padding-bottom: 7px;
-}
-
-.compact-pipeline .stage-number {
-  flex-basis: 26px;
-  font-size: 12pt;
-  height: 26px;
-  width: 26px;
-}
-
-.compact-pipeline .stage-title {
-  font-size: 13pt;
-}
-
-.compact-pipeline .stage h3 {
+.compact-pipeline .pipeline-flow .card h3 {
   font-size: 13pt;
   margin-bottom: 3px;
 }
 
-.compact-pipeline .stage .callout {
+.compact-pipeline .pipeline-flow .card h3:first-child {
+  padding-bottom: 6px;
+}
+
+.compact-pipeline .pipeline-flow .card .callout {
   border-left-width: 6px;
   border-radius: 14px;
   box-shadow: none;
   padding: 10px 12px;
 }
 
-.compact-pipeline .stage .callout p {
+.compact-pipeline .pipeline-flow .card .callout p {
   font-size: 12pt;
   line-height: 1.24;
 }
 
-.compact-pipeline .pill-row,
-.compact-pipeline .model-row {
+.compact-pipeline .pipeline-flow .badge-row {
   gap: 6px;
 }
 
-.compact-pipeline .pill,
-.compact-pipeline .model-pill {
+.compact-pipeline .pipeline-flow .badge,
+.compact-pipeline .pipeline-flow .model-pill {
   font-size: 10pt;
   padding: 6px 9px;
 }
 
-.compact-pipeline .arrow-cell {
+.compact-pipeline .pipeline-arrow {
   gap: 5px;
 }
 
-.compact-pipeline .arrow-label {
+.compact-pipeline .pipeline-arrow-label {
   font-size: 10pt;
   padding: 5px 8px;
 }
@@ -670,13 +632,13 @@ body,
   font-size: 28pt;
 }
 
-.compact-pipeline .stage-flow + .callout {
+.compact-pipeline .pipeline-flow-row + .callout {
   border-left-width: 6px;
   border-radius: 16px;
   padding: 12px 16px;
 }
 
-.compact-pipeline .stage-flow + .callout p {
+.compact-pipeline .pipeline-flow-row + .callout p {
   font-size: 13pt;
   line-height: 1.25;
 }
@@ -687,7 +649,7 @@ body,
   .card-grid,
   .grid-60,
   .grid-45,
-  .stage-flow,
+  .pipeline-flow-row,
   .pipe,
   .metric-grid {
     grid-template-columns: 1fr;
@@ -708,6 +670,21 @@ body,
 
 .slidev-layout.default {
   background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.slidev-layout.two-cols-header.w-full {
+  grid-template-rows: auto auto auto;
+  align-content: center;
+}
+
+.slidev-layout.two-cols-header .col-left,
+.slidev-layout.two-cols-header .col-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .slide-root {
@@ -734,7 +711,7 @@ body,
 }
 
 .slidev-layout .metric-value {
-  color: var(--amber);
+  color: var(--primary-deep);
   display: block;
   font-family: var(--heading-font);
   font-size: 27pt;

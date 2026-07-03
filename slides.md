@@ -90,9 +90,9 @@ routeAlias: pwm-standard
   />
 </CardGrid>
 
-<Callout type="warn">
+<Note>
 PWM assumes that motif positions contribute independently.
-</Callout>
+</Note>
 
 ---
 routeAlias: beyond-independent-positions
@@ -127,9 +127,9 @@ After de novo discovery we still need to know:
 
 ::right::
 
-<Callout type="warn">
+<Note>
 Most established comparison tools are PWM/PFM-centered. Non-PWM models often have to be converted before annotation.
-</Callout>
+</Note>
 
 ---
 routeAlias: conversion-can-mislead
@@ -139,9 +139,9 @@ routeAlias: conversion-can-mislead
 
 <PipeFlow />
 
-<Callout>
+<Note>
 We need a comparison method that does not require every motif model to pretend to be a PWM.
-</Callout>
+</Note>
 
 ---
 layout: section
@@ -168,10 +168,6 @@ routeAlias: recognition-profile-comparison
 2. Calibrate scores as `-log10(ERR)`.
 3. Align strand and shift.
 4. Compare the best-matched local profiles.
-
-<Callout type="good">
-Same coordinate system, even when model architectures differ.
-</Callout>
 
 ::right::
 
@@ -359,9 +355,9 @@ routeAlias: database-annotation-check
   variant="wide"
 />
 
-<Callout type="good">
+<Note>
 PWM-1, PWM-2, BaMM and Slim fall into AP-1/CRE-like, ATF3-compatible specificity; DIMONT is less aligned with the main cluster.
-</Callout>
+</Note>
 
 ---
 routeAlias: pairwise-profile-graph
@@ -427,9 +423,9 @@ routeAlias: interpretation
   <Card title="What BaMM/Slim show" text="A flexible model can recognize both variants as one broader specificity." />
 </CardGrid>
 
-<Callout>
+<Note>
 MIMOSA makes this visible without first flattening each model into a single PWM.
-</Callout>
+</Note>
 
 ---
 routeAlias: take-home
