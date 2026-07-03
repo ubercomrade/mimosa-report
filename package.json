@@ -1,0 +1,16 @@
+{
+  "name": "mimosa-bgrs-2026-slidev",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "slidev --open",
+    "build": "slidev build --out dist",
+    "export": "slidev export --output MIMOSA_BGRS_2026_slidev.pdf"
+  },
+  "dependencies": {
+    "@slidev/cli": "^52.16.0",
+    "@slidev/theme-default": "latest",
+    "@slidev/theme-seriph": "latest",
+    "vue": "^3.5.33"
+  }
+}
