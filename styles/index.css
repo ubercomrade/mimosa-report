@@ -667,8 +667,7 @@ body,
   line-height: 1.25;
 }
 
-.card.annotation-highlight,
-.slidev-vclick-target[data-id="annotation-card"]:not(.slidev-vclick-hidden) {
+.card.annotation-highlight {
   border-bottom: 4px solid var(--primary);
   box-shadow: 0 16px 34px var(--shadow), 0 4px 0 var(--primary);
   transition: border-color 280ms ease, box-shadow 280ms ease;
