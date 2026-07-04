@@ -11,6 +11,14 @@
     "@slidev/cli": "^52.16.0",
     "@slidev/theme-default": "latest",
     "@slidev/theme-seriph": "latest",
+    "slidev-addon-fancy-arrow": "^0.16.1",
+    "slidev-component-pager": "^1.1.0",
     "vue": "^3.5.33"
+  },
+  "slidev": {
+    "addons": [
+      "slidev-component-pager",
+      "fancy-arrow"
+    ]
   }
 }

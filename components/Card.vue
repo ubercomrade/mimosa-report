@@ -8,11 +8,15 @@ defineProps({
     type: String,
     default: '',
   },
+  dataId: {
+    type: String,
+    default: '',
+  },
 })
 </script>
 
 <template>
-  <section class="card">
+  <section class="card" :data-id="dataId || undefined">
     <h3 v-if="title">{{ title }}</h3>
     <p v-if="text">{{ text }}</p>
     <slot />
