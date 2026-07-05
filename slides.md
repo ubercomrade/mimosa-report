@@ -55,32 +55,32 @@ Motifs let us predict transcription factor binding sites (TFBS) in the genome, w
 
 ---
 routeAlias: pwm-standard
+clicks: 4
 ---
 
 ## PWM: the standard motif model
 
-<CardGrid :columns="2">
-  <ListCard
-    title="Position weight matrix"
-    :items="[
-      'One column per motif position.',
-      'Weights for A/C/G/T.',
-      'Simple score for each candidate site.',
-    ]"
-  />
-  <ListCard
-    title="Why it became standard"
-    :items="[
-      'Interpretable.',
-      'Fast to scan.',
-      'Supported by mature tools.',
-    ]"
-  />
-</CardGrid>
+<div class="pwm-standard-grid">
+  <section class="card pwm-standard-copy">
+    <h3>Position weight matrix</h3>
+    <p class="small">
+      PWM starts from aligned binding sites and treats motif positions as independent contributors.
+    </p>
+    <ul class="pwm-theses">
+      <li v-click="1">Count A/C/G/T in each motif column.</li>
+      <li v-click="2">Normalize column counts into probabilities.</li>
+      <li v-click="3">Convert probabilities into log-odds weights.</li>
+      <li v-click="4">Slide the matrix across a candidate sequence.</li>
+      <li v-click="4">Sum position weights to score each window.</li>
+    </ul>
+  </section>
 
-<Note>
-PWM assumes that motif positions contribute independently.
-</Note>
+   <PWMAnimation :step="$clicks" /> 
+
+  <Note v-click="4" class="pwm-standard-note">
+  PWM is a standard, interpretable and convenient motif model.
+  </Note>
+</div>
 
 ---
 routeAlias: beyond-independent-positions

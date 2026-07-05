@@ -63,10 +63,11 @@ The presentation should communicate the following ideas:
 - `slides.md`: Slidev deck entry point (34 slides).
 - `components/`: small Vue components used by the deck
   (`BadgeRow`, `Callout`, `Card`, `CardGrid`, `Eyebrow`, `FigurePanel`, `ListCard`, `MetricGrid`, `Note`, `PipeFlow`, `PipelineFlow`).
-- `styles/index.css`: global presentation styling.
+  Components are thin wrappers with a `<slot/>`; `v-click`, `v-mark`, `class`, and `data-id` pass through to the root element.
+- `styles/index.css`: global presentation styling. Defines the color tokens (`:root` variables: `--primary`, `--hot`, `--pwm`, `--alt`, …), layout classes (`.slidev-layout`, `.grid-2/3`, `.grid-60/45`), card/pipeline classes (`.card`, `.card-grid`, `.pipeline-flow`, `.pipeline-flow-row`, `.pipeline-legend`, `.pipeline-legend-below`), and `.note`/`.callout`/`.badge`/`.model-pill` styling.
 - `global-bottom.vue`: persistent footer with conference label and slide count.
 - `assets/` and `plots/`: only image files referenced by `slides.md`.
-- `package.json` and `pnpm-lock.yaml`: local Slidev tooling.
+- `package.json` and `pnpm-lock.yaml`: local Slidev tooling. Notable add-ons: `slidev-addon-fancy-arrow` (provides `FancyArrow`).
 - `pnpm-workspace.yaml`: pnpm configuration (shamefully-hoist, Playwright build-script allowlist).
 - `netlify.toml`, `vercel.json`, `.gitignore`: deployment and VCS configuration.
 - `README.md`: project overview.
@@ -95,6 +96,23 @@ node -e "const fs=require('fs'); const p=require('path'); const md=fs.readFileSy
 - Use consistent terminology: `PWM motif model` and `Alternative motif model`.
 - Keep speaker notes synchronized with visible slide content when the meaning changes.
 
+### Directives and add-ons
+
+- `v-click` (built-in): controls element visibility by click index. Apply as `v-click="N"` where N is the 1-based click index on the slide. Hidden elements use `visibility:hidden` (layout preserved, `FancyArrow` snap targets keep their geometry).
+- `v-mark` (`@slidev/client` built-in directive, backed by `@slidev/rough-notation`): draws rough-notation over an element. Usage: `v-mark="{ at: N, type: 'box'|'underline'|'highlight'|'circle'|'strike-through'|'crossed-off'|'bracket', color: '#hex', strokeWidth, padding, iterations, animate, animationDuration, delay, opacity, multiline, rtl, brackets }"`. `at` is the click index (same scheme as `v-click`); `true` shows immediately, `false` hides. Color must be an explicit hex/CSS value — CSS variables like `var(--hot)` are **not** resolved by rough-notation, use the literal hex (e.g. `#9a4f48` for `--hot`). Modifiers exist: `v-mark.box="N"`, `v-mark.red`, `v-mark.delay300`, `v-mark.op50`. Prefer the object form in this project.
+- `FancyArrow` (from `slidev-addon-fancy-arrow`): draws an animated rough arrow between two snap targets. Key props: `from`, `to` (selectors with anchor suffix: `[data-id=foo]@top|bottom|left|right|topleft|topright|bottomleft|bottomright`, or `@(x,y)` pixel offset on that edge), `color` (CSS variable like `var(--primary)` works here, or hex), `width`, `head-type="polygon"|"line"`, `head-size`, `roughness`, `arc` (signed; sign flips the side of the bow, magnitude 0–1 sets curvature), `duration`. Use `v-click="N"` on the component to reveal on click. The arrow SVG is `position: absolute` overlay — it does **not** take up flow space; do not rely on it for layout.
+
+### Pipeline slide conventions (`binding-to-annotation`)
+
+The three-card pipeline on the `binding-to-annotation` slide uses a dedicated structure:
+
+- `.pipeline-flow` (flex column) wraps `.pipeline-flow-row` (a 3-column grid, `repeat(3, minmax(0,1fr))`, with separate `column-gap` (48px) and `row-gap` (12px) — the row-gap leaves room for the legend on row 2).
+- Three `<section class="card" data-id="card-N">` cards are grid children. A legend `<div class="badge-row pipeline-legend pipeline-legend-below">` is a 4th grid child with `grid-column: 2; grid-row: 2;` so it sits strictly under card-2.
+- Cards appear via `v-click`: card-1 on click 1, card-2 on click 2 (with the legend), card-3 on click 3.
+- `FancyArrow` connectors between cards use `@top → @top` anchors and a positive `arc`; the `arrow-label` slot holds the caption. Arrows appear on the same click as their destination card.
+- `v-mark` highlights card-3 with a `box` (click 4) and underlines text inside the `<Note>` (click 5). Keep `v-mark` `at` ≥ the element's `v-click` index so the annotation draws on a visible element.
+- `.pipeline-flow { margin-top: 48px }` keeps arrow bows clear of the slide `h2` heading.
+
 ## Validation
 
 After substantive edits:
@@ -104,6 +122,8 @@ pnpm run build
 ```
 
 Also check that Slidev still parses 34 slides unless the slide count was intentionally changed.
+
+For visual / click-animation changes, run `pnpm run dev` and step through the affected slides (especially `binding-to-annotation`) to verify click ordering, arrow anchors, and `v-mark` reveal timing.
 
 ## Files Not to Treat as Primary Sources
 

@@ -521,6 +521,42 @@ body,
   line-height: 1.28;
 }
 
+.pwm-standard-grid {
+  align-items: stretch;
+  display: grid;
+  gap: 18px 28px;
+  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  height: 506px;
+}
+
+.pwm-standard-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.pwm-standard-copy h3 {
+  color: var(--ink);
+  margin-bottom: 0;
+}
+
+.pwm-theses {
+  display: grid;
+  gap: 8px;
+  padding-left: 1.05em;
+}
+
+.pwm-theses li {
+  font-size: 14pt;
+  line-height: 1.26;
+}
+
+.pwm-standard-note {
+  grid-column: 1 / -1;
+  margin-top: 0;
+}
+
 .metric-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -682,6 +718,7 @@ body,
   .card-grid,
   .grid-60,
   .grid-45,
+  .pwm-standard-grid,
   .pipeline-flow-row,
   .pipe,
   .metric-grid {
