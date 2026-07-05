@@ -41,16 +41,62 @@ routeAlias: why-motifs-matter
 
 ::left::
 
-- Transcription factors control gene expression programs.
-- TFs bind specific DNA sites and interact with the transcriptional complex.
-- The same TF tolerates sequence variation.
-- A **motif** summarizes this tolerated variation.
+- Transcription factors (TFs) bind specific DNA sites and interact with the transcriptional complex
+- TFs control gene expression programs.
+- One TF can bind to a range of similar DNA sequences.
+- A **motif** captures the allowed variation within them.
+
 
 ::right::
 
 <Callout>
-Motifs let us predict transcription factor binding sites in the genome, which makes it possible to study transcription regulation.
+Motifs let us predict transcription factor binding sites (TFBS) in the genome, which makes it possible to study transcription regulation.
 </Callout>
+
+---
+routeAlias: pwm-standard
+---
+
+## PWM: the standard motif model
+
+<CardGrid :columns="2">
+  <ListCard
+    title="Position weight matrix"
+    :items="[
+      'One column per motif position.',
+      'Weights for A/C/G/T.',
+      'Simple score for each candidate site.',
+    ]"
+  />
+  <ListCard
+    title="Why it became standard"
+    :items="[
+      'Interpretable.',
+      'Fast to scan.',
+      'Supported by mature tools.',
+    ]"
+  />
+</CardGrid>
+
+<Note>
+PWM assumes that motif positions contribute independently.
+</Note>
+
+---
+routeAlias: beyond-independent-positions
+---
+
+## Beyond independent positions
+
+<CardGrid :columns="3">
+  <Card title="Dependencies" text="Neighboring nucleotides can interact in real TFBSs." />
+  <Card title="Spacer variants" text="The same motif family may allow different half-site spacing." />
+  <Card title="Site classes" text="One experiment may contain several related binding-site groups." />
+</CardGrid>
+
+<Note>
+Models such as BaMM, Slim and DIMONT try to preserve this extra structure instead of flattening it into one matrix.
+</Note>
 
 ---
 routeAlias: binding-to-annotation
@@ -154,74 +200,15 @@ routeAlias: binding-to-annotation
 
 
 <Note v-click="5" data-id="bottleneck-note">
-  <span v-mark="{ at: 5, type: 'underline', color: '#9a4f48', iterations: 3 }">Annotation tools exist only for PWM motif models, but not for alternative motif models</span>
+  <span v-mark="{ at: 5, type: 'underline', color: '#9a4f48', iterations: 3 }">Annotation tools exist only for PWM motif models, but not for alternative motif models.</span> Non-PWM models often have to be converted before annotation.
 </Note>
 
----
-routeAlias: pwm-standard
----
 
-## PWM: the standard model
-
-<CardGrid :columns="2">
-  <ListCard
-    title="Position weight matrix"
-    :items="[
-      'One column per motif position.',
-      'Weights for A/C/G/T.',
-      'Simple score for each candidate site.',
-    ]"
-  />
-  <ListCard
-    title="Why it became standard"
-    :items="[
-      'Interpretable.',
-      'Fast to scan.',
-      'Supported by mature tools.',
-    ]"
-  />
-</CardGrid>
-
-<Note>
-PWM assumes that motif positions contribute independently.
-</Note>
-
----
-routeAlias: beyond-independent-positions
----
-
-## Beyond independent positions
-
-<CardGrid :columns="3">
-  <Card title="Dependencies" text="Neighboring nucleotides can interact in real TFBSs." />
-  <Card title="Spacer variants" text="The same motif family may allow different half-site spacing." />
-  <Card title="Site classes" text="One experiment may contain several related binding-site groups." />
-</CardGrid>
-
-<Note>
-Models such as BaMM, Slim and DIMONT try to preserve this extra structure instead of flattening it into one matrix.
-</Note>
-
----
-layout: two-cols-header
-routeAlias: annotation-bottleneck
----
-
-## Annotation is the bottleneck
-
-::left::
-
-After de novo discovery we still need to know:
+<!--After de novo discovery we still need to know:
 
 - Which known TF motif is closest?
 - Are two discovered models equivalent?
-- Do different tools recover the same signal?
-
-::right::
-
-<Callout>
-Most established comparison tools are PWM/PFM-centered. Non-PWM models often have to be converted before annotation.
-</Callout>
+- Do different tools recover the same signal?-->
 
 ---
 routeAlias: conversion-can-mislead
@@ -244,8 +231,6 @@ routeAlias: mimosa-idea
 <Eyebrow>MIMOSA idea</Eyebrow>
 
 # Compare model **behavior**, not model parameters
-
-The shared object is a recognition profile over the same sequences.
 
 ---
 layout: two-cols-header
@@ -305,11 +290,9 @@ class: section-divider
 routeAlias: retrieval-question
 ---
 
-<Eyebrow>Retrieval benchmark</Eyebrow>
+<Eyebrow>Benchmark against established tools</Eyebrow>
 
 # Does it work as a retrieval method?
-
-Benchmark against established PWM-oriented tools.
 
 ---
 layout: two-cols-header
@@ -523,7 +506,7 @@ MIMOSA makes this visible without first flattening each model into a single PWM.
 routeAlias: take-home
 ---
 
-## Take-home
+## Conclusion
 
 1. MIMOSA compares **recognition profiles**, not motif parameters.
 2. It stays close to strong established tools in a HOCOMOCO retrieval benchmark.
