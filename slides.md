@@ -54,29 +54,107 @@ Motifs let us predict transcription factor binding sites in the genome, which ma
 
 ---
 routeAlias: binding-to-annotation
-class: compact-pipeline
 ---
 
 ## From binding data to TF annotation
 
-<PipelineFlow />
+<div class="pipeline-flow">
+  <div class="pipeline-flow-row">
+    <section v-click="1" class="card" data-id="card-1">
+      <h3>1 &middot; Experimental data</h3>
+      <div class="callout">Read-to-sequence preprocessing</div>
+      <p class="pipeline-subhead">In vitro</p>
+      <div class="badge-row">
+        <span class="badge">HT-SELEX</span>
+        <span class="badge">DAP-seq</span>
+      </div>
+      <p class="pipeline-subhead">In vivo</p>
+      <div class="badge-row">
+        <span class="badge">ChIP-seq</span>
+        <span class="badge">CUT&amp;Tag</span>
+      </div>
+    </section>
+    <section v-click="2" class="card" data-id="card-2">
+      <h3>2 &middot; <em>de novo</em> motif discovery</h3>
+      <div class="callout">Search for overrepresented sequence patterns</div>
+      <p class="pipeline-subhead">Tools</p>
+      <div class="badge-row">
+        <span class="model-pill pwm">STREME</span>
+        <span class="model-pill pwm">MEME</span>
+        <span class="model-pill pwm">HOMER</span>
+      </div>
+      <div class="badge-row">
+        <span class="model-pill alt">BaMM</span>
+        <span class="model-pill alt">Slim</span>
+        <span class="model-pill alt">DIMONT</span>
+        <span class="model-pill alt">SiteGA</span>
+      </div>
+    </section>
+    <section
+      v-click="3"
+      v-mark="{ at: 4, type: 'box', color: 'var(--hot)' }"
+      class="card"
+      data-id="card-3"
+    >
+      <h3>3 &middot; Annotation</h3>
+      <div class="callout">Match the <em>de novo</em> motif to known motifs from HOCOMOCO, JASPAR or CIS-BP</div>
+      <p class="pipeline-subhead">Tools</p>
+      <div class="badge-row">
+        <span class="model-pill pwm">Tomtom</span>
+        <span class="model-pill pwm">STAMP</span>
+        <span class="model-pill pwm">MACRO-APE</span>
+      </div>
+    </section>
+    <div v-click="2" class="badge-row pipeline-legend pipeline-legend-below">
+      <span class="model-pill pwm">PWM motif model</span>
+      <span class="model-pill alt">Alternative motif model</span>
+    </div>
+  </div>
+</div>
 
 <FancyArrow
-  v-click
-  from="[data-id=annotation-card]@bottom"
-  to="[data-id=bottleneck-note]@top"
+  v-click="2"
+  from="[data-id=card-1]@(170,0)"
+  to="[data-id=card-2]@(160,0)"
   color="var(--primary)"
-  :width="4"
-  head-type="polygon"
-  :head-size="36"
-  :roughness="1.4"
-  :bowing="0.4"
-  :arc="0.18"
+  :width="3"
+  :head-size="22"
+  :roughness="1"
+  :arc="0.2"
+  :duration="500"
+>
+  <span class="arrow-label">sequences</span>
+</FancyArrow>
+
+<FancyArrow
+  v-click="3"
+  from="[data-id=card-2]@top"
+  to="[data-id=card-3]@top"
+  color="var(--primary)"
+  :width="3"
+  :head-size="22"
+  :roughness="1"
+  :arc="0.2"
+  :duration="500"
+>
+  <span class="arrow-label">motifs</span>
+</FancyArrow>
+
+<FancyArrow
+  v-click="5"
+  from="[data-id=card-3]@bottom"
+  to="[data-id=bottleneck-note]@(800,0)"
+  color="var(--primary)"
+  :width="3"
+  :head-size="22"
+  :roughness="1"
+  :arc="-0.2"
   :duration="600"
 />
 
-<Note data-id="bottleneck-note">
-  Annotation tools exist for PWM motif models, but not for alternative motif models. The bottleneck is the last step for non-PWM models.
+
+<Note v-click="5" data-id="bottleneck-note">
+  <span v-mark="{ at: 5, type: 'underline', color: '#9a4f48', iterations: 3 }">Annotation tools exist only for PWM motif models, but not for alternative motif models</span>
 </Note>
 
 ---
