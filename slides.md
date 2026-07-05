@@ -233,27 +233,29 @@ routeAlias: mimosa-idea
 # Compare model **behavior**, not model parameters
 
 ---
-layout: two-cols-header
 routeAlias: recognition-profile-comparison
+clicks: 5
 ---
 
 ## Recognition-profile comparison
 
-::left::
+<div class="mimosa-method-grid">
+  <section class="card mimosa-method-copy">
+    <ol class="mimosa-method-steps">
+      <li>Scan a shared profile sequence set.</li>
+      <li v-click="1">Read out raw row-score profiles for each model.</li>
+      <li v-click="2">Calibrate to <code>-log10(ERR)</code>; anchors rise above the threshold.</li>
+      <li v-click="3">Extract paired ±10-position local windows around each M1 anchor.</li>
+      <li v-click="4">Report the best cosine/Dice agreement over strand and shift.</li>
+    </ol>
+  </section>
 
-1. Score a shared set of profile sequences.
-2. Calibrate scores as `-log10(ERR)`.
-3. Align strand and shift.
-4. Compare the best-matched local profiles.
+  <MimosaAlgorithmSteps :step="Math.min($clicks + 1, 5)" />
+</div>
 
-::right::
-
-<FigurePanel
-  src="assets/mimosa_algorithm_animation.gif"
-  alt="Animated schematic of the MIMOSA algorithm"
-  variant="compact"
-  caption="Slidev keeps the GIF animation in the browser presentation."
-/>
+<Note v-click="5" class="mimosa-method-note">
+Similarity is the best local agreement between calibrated recognition profiles, not between motif parameters.
+</Note>
 
 ---
 routeAlias: mimosa-returns
