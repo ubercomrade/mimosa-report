@@ -279,6 +279,14 @@ body,
   font-size: 15pt;
 }
 
+.card-media {
+  display: block;
+  margin: 18px auto 0;
+  max-height: 165px;
+  max-width: 100%;
+  object-fit: contain;
+}
+
 .callout {
   border-left: 8px solid var(--primary);
 }
@@ -314,6 +322,39 @@ body,
 .grid-3,
 .card-grid.columns-3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.card-grid.columns-2.card-grid-size-60-40 {
+  grid-template-columns: minmax(0, 60fr) minmax(0, 40fr);
+}
+
+.card-grid.columns-2.card-grid-size-40-60 {
+  grid-template-columns: minmax(0, 40fr) minmax(0, 60fr);
+}
+
+.card-grid.columns-3.card-grid-size-45-28-28 {
+  grid-template-columns: minmax(0, 45fr) repeat(2, minmax(0, 28fr));
+}
+
+.card-grid.columns-3.card-grid-size-28-45-28 {
+  grid-template-columns: minmax(0, 28fr) minmax(0, 45fr) minmax(0, 28fr);
+}
+
+.card-grid.columns-3.card-grid-size-28-28-45 {
+  grid-template-columns: repeat(2, minmax(0, 28fr)) minmax(0, 45fr);
+}
+
+.card-grid-bottom-media .card {
+  display: flex;
+  flex-direction: column;
+}
+
+.card-grid-bottom-media .card p {
+  margin-bottom: 18px;
+}
+
+.card-grid-bottom-media .card-media {
+  margin-top: auto;
 }
 
 .grid-60 {

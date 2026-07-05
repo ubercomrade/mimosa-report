@@ -82,10 +82,16 @@ routeAlias: beyond-independent-positions
 
 ## Nature of dependency positions
 
-<CardGrid :columns="3">
-    <Card title="Dimerization" text="A partner TF can influence binding affinity at TFBSs." />
-    <Card title="Flanks" text="Flanking regions can either increase or decrease affinity for the same binding site." />
-    <Card title="Conformation" text="Some TFs can bind sites that differ substantially from the canonical motif." />
+<CardGrid :columns="3" class="card-grid-size-45-28-28 card-grid-bottom-media">
+    <Card title="Dimerization" text="A partner TF can influence binding affinity at TFBSs.">
+        <img class="card-media" :src="'assets/dimerization.svg'" alt="Dimerization schematic" />
+    </Card>
+    <Card title="Flanks" text="Flanking regions can either increase or decrease affinity for the same binding site.">
+        <img class="card-media" :src="'assets/context.svg'" alt="Flanking sequence context schematic" />
+    </Card>
+    <Card title="Conformation" text="Some TFs can bind sites that differ substantially from the canonical motif.">
+        <img class="card-media" :src="'assets/conformation.svg'" alt="Conformation-dependent binding schematic" />
+    </Card>
 </CardGrid>
 
 <Note>
