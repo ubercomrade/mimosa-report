@@ -55,30 +55,24 @@ Motifs let us predict transcription factor binding sites (TFBS) in the genome, w
 
 ---
 routeAlias: pwm-standard
-clicks: 4
+clicks: 6
 ---
 
-## PWM: the standard motif model
+## Position weight matrix: the standard motif model
 
 <div class="pwm-standard-grid">
   <section class="card pwm-standard-copy">
-    <h3>Position weight matrix</h3>
-    <p class="small">
-      PWM starts from aligned binding sites and treats motif positions as independent contributors.
-    </p>
     <ul class="pwm-theses">
-      <li v-click="1">Count A/C/G/T in each motif column.</li>
-      <li v-click="2">Normalize column counts into probabilities.</li>
-      <li v-click="3">Convert probabilities into log-odds weights.</li>
-      <li v-click="4">Slide the matrix across a candidate sequence.</li>
-      <li v-click="4">Sum position weights to score each window.</li>
+      <li>A PWM is built from aligned binding sites and scores candidate sites as a sum of position-specific contributions</li>
+      <li v-click="4">PWM remains the de facto standard for motif representation and analysis</li>
+      <li v-click="5">However, real TF binding can involve dependencies between motif positions, so some binding sites may be poorly captured by PWM alone</li>
     </ul>
   </section>
 
    <PWMAnimation :step="$clicks" /> 
 
-  <Note v-click="4" class="pwm-standard-note">
-  PWM is a standard, interpretable and convenient motif model.
+  <Note v-click="6" class="pwm-standard-note">
+      <span v-mark="{ at: 6, type: 'underline', color: '#9a4f48', iterations: 3 }">The position-independence assumption may not always be valid</span>
   </Note>
 </div>
 
@@ -86,12 +80,12 @@ clicks: 4
 routeAlias: beyond-independent-positions
 ---
 
-## Beyond independent positions
+## Nature of dependency positions
 
 <CardGrid :columns="3">
-  <Card title="Dependencies" text="Neighboring nucleotides can interact in real TFBSs." />
-  <Card title="Spacer variants" text="The same motif family may allow different half-site spacing." />
-  <Card title="Site classes" text="One experiment may contain several related binding-site groups." />
+    <Card title="Dimerization" text="A partner TF can influence binding affinity at TFBSs." />
+    <Card title="Flanks" text="Flanking regions can either increase or decrease affinity for the same binding site." />
+    <Card title="Conformation" text="Some TFs can bind sites that differ substantially from the canonical motif." />
 </CardGrid>
 
 <Note>
