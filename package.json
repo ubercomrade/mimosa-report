@@ -5,12 +5,12 @@
   "scripts": {
     "dev": "slidev --open",
     "build": "slidev build --out dist && pnpm run copy-static-assets",
-    "build:pages": "slidev build --out dist --base ./ && pnpm run copy-static-assets",
+    "build:pages": "slidev build --out dist --base /mimosa-report/ && pnpm run copy-static-assets",
     "copy-static-assets": "mkdir -p dist/assets && cp -R assets/. dist/assets/",
     "export": "slidev export --output MIMOSA_BGRS_2026_slidev.pdf"
   },
   "dependencies": {
-    "@slidev/cli": "^52.16.0",
+    "@slidev/cli": "52.15.2",
     "@slidev/theme-default": "latest",
     "@slidev/theme-seriph": "latest",
     "slidev-addon-fancy-arrow": "^0.16.1",
