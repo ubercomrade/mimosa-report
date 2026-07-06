@@ -8,6 +8,28 @@ import { defineConfig } from 'vite'
 //
 // TODO: remove this file once @vueuse/core publishes a release past 14.3.0.
 export default defineConfig({
+  plugins: [
+    {
+      name: 'normalize-github-pages-slidev-hash-routes',
+      transformIndexHtml() {
+        return [
+          {
+            tag: 'script',
+            injectTo: 'head-prepend',
+            children: `
+;(function () {
+  var base = '/mimosa-report/'
+  var hashPath = window.location.hash.slice(1)
+  if (hashPath.indexOf(base) === 0) {
+    window.location.replace(base + hashPath.slice(base.length))
+  }
+})()
+`,
+          },
+        ]
+      },
+    },
+  ],
   build: {
     rolldownOptions: {
       onLog(level, log, defaultHandler) {
