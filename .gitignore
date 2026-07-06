@@ -6,5 +6,11 @@ dist
 .remote-assets
 .slidev
 components.d.ts
-.AGENTS.md
+AGENTS.md
 plots
+.agents/
+.codex/
+.vercel/
+.netlify/
+.pnpm-store/
+MIMOSA_BGRS_2026_slidev.pdf
