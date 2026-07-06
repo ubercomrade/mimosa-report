@@ -36,8 +36,8 @@ const scanModels = [
         length: 4,
         y: 76,
         scores: [
-            2.1, 3.4, 2.7, 4.6, 3.2, 2.8, 4.1, 3.6, 2.9, 3.8, 2.5, 4.3, 3.1,
-            2.7,
+            -1.2, 0.8, -0.6, 2.1, -1.0, 1.4, -1.5, 0.6, -0.3, 1.7, -0.9, 2.4,
+            0.5, -0.7,
         ],
     },
     {
@@ -45,7 +45,9 @@ const scanModels = [
         label: "Motif 2",
         length: 6,
         y: 222,
-        scores: [1.9, 2.8, 4.2, 3.1, 4.9, 3.7, 2.6, 4.4, 3.3, 4.7, 3.0, 3.9],
+        scores: [
+            -0.8, 1.3, -1.1, 2.0, 0.4, -1.4, 1.8, -0.5, 2.2, -0.9, 0.7, -1.2,
+        ],
     },
 ];
 const scanBaseX = 112;
@@ -126,108 +128,67 @@ onBeforeUnmount(() => {
     stopScanLoop();
 });
 
-// Shared x-coordinates for the 20 profile positions.
-const xs = Array.from({ length: 20 }, (_, i) => 120 + i * 28);
+const profileBaseX = 132;
+const profileDx = 38;
+const m1RawBaseline = 125;
+const m2RawBaseline = 310;
+const m1NormBaseline = 180;
+const m2NormBaseline = 338;
+const rawScoreScale = 32;
+const normScoreScale = 24;
 
-// Jagged raw profiles with larger local swings.
-const m1Raw = [
-    { y: 152 },
-    { y: 128 },
-    { y: 158 },
-    { y: 132 },
-    { y: 165 },
-    { y: 105 },
-    { y: 170 },
-    { y: 145 },
-    { y: 152 },
-    { y: 138 },
-    { y: 168 },
-    { y: 110 },
-    { y: 158 },
-    { y: 135 },
-    { y: 162 },
-    { y: 130 },
-    { y: 155 },
-    { y: 120 },
-    { y: 160 },
-    { y: 138 },
-];
+const m1Xs = Array.from(
+    { length: scanModels[0].scores.length },
+    (_, i) => profileBaseX + i * profileDx,
+);
+const m2Xs = Array.from(
+    { length: scanModels[1].scores.length },
+    (_, i) => profileBaseX + i * profileDx,
+);
 
-// Calibrated: baseline high, strong peaks well above threshold.
-const m1Cal = [
-    { y: 172 },
-    { y: 170 },
-    { y: 174 },
-    { y: 171 },
-    { y: 173 },
-    { y: 92 },
-    { y: 175 },
-    { y: 172 },
-    { y: 171 },
-    { y: 174 },
-    { y: 92 },
-    { y: 173 },
-    { y: 175 },
-    { y: 171 },
-    { y: 174 },
-    { y: 172 },
-    { y: 170 },
-    { y: 173 },
-    { y: 171 },
-    { y: 174 },
+const m1ErrScores = [
+    0.3, 0.4, 0.2, 0.5, 0.3, 4.0, 0.4, 0.3, 0.2, 0.4, 3.9, 0.5, 0.3,
+    0.4,
 ];
+const m2ErrScores = [0.3, 0.4, 0.3, 3.6, 0.5, 0.4, 0.2, 0.4, 3.5, 0.3, 0.5, 0.3];
 
-const m2Raw = [
-    { y: 250 },
-    { y: 222 },
-    { y: 255 },
-    { y: 228 },
-    { y: 260 },
-    { y: 220 },
-    { y: 265 },
-    { y: 232 },
-    { y: 250 },
-    { y: 240 },
-    { y: 262 },
-    { y: 218 },
-    { y: 255 },
-    { y: 230 },
-    { y: 258 },
-    { y: 225 },
-    { y: 252 },
-    { y: 220 },
-    { y: 256 },
-    { y: 235 },
-];
+const m1AxisBaseline = computed(() => (s.value >= 3 ? m1NormBaseline : m1RawBaseline));
+const m2AxisBaseline = computed(() => (s.value >= 3 ? m2NormBaseline : m2RawBaseline));
+const profileYAxisLabel = computed(() => (s.value >= 3 ? "-log10(ERR)" : "Score"));
 
-const m2Cal = [
-    { y: 272 },
-    { y: 268 },
-    { y: 270 },
-    { y: 269 },
-    { y: 271 },
-    { y: 190 },
-    { y: 272 },
-    { y: 270 },
-    { y: 268 },
-    { y: 271 },
-    { y: 190 },
-    { y: 269 },
-    { y: 272 },
-    { y: 268 },
-    { y: 270 },
-    { y: 269 },
-    { y: 268 },
-    { y: 270 },
-    { y: 269 },
-    { y: 271 },
-];
+function rawScoreToY(score, baseline) {
+    return baseline - score * rawScoreScale;
+}
+
+function errScoreToY(score, baseline) {
+    return baseline - score * normScoreScale;
+}
+
+function profileAxisBottom(baseline) {
+    return s.value >= 3 ? baseline : baseline + 36;
+}
+
+function profileAxisTop(baseline) {
+    return s.value >= 3 ? baseline - 116 : baseline - 64;
+}
 
 const m1Points = computed(() =>
-    xs.map((x, i) => ({ x, y: (s.value >= 3 ? m1Cal : m1Raw)[i].y })),
+    m1Xs.map((x, i) => ({
+        x,
+        y:
+            s.value >= 3
+                ? errScoreToY(m1ErrScores[i], m1NormBaseline)
+                : rawScoreToY(scanModels[0].scores[i], m1RawBaseline),
+    })),
 );
 const m2Points = computed(() =>
-    xs.map((x, i) => ({ x, y: (s.value >= 3 ? m2Cal : m2Raw)[i].y })),
+    m2Xs.map((x, i) => ({
+        x,
+        y:
+            s.value >= 3
+                ? errScoreToY(m2ErrScores[i], m2NormBaseline)
+                : rawScoreToY(scanModels[1].scores[i], m2RawBaseline),
+    })),
 );
 
 const m2Shift = computed(() => (s.value >= 5 ? -112 : 0));
@@ -405,27 +366,155 @@ const showResult = computed(() => s.value >= 5);
                 </g>
 
                 <!-- Profiles -->
-                <g v-show="showProfiles" class="profile-layer">
-                    <text
-                        v-show="showRawTitle"
-                        class="axis-title"
-                        x="120"
-                        y="46"
-                    >
-                        raw score profiles: M1 and M2
-                    </text>
-                    <text
-                        v-show="showCalTitle"
-                        class="axis-title"
-                        x="120"
-                        y="46"
-                    >
-                        calibrated recognition profiles: -log10(ERR)
-                    </text>
+                <g
+                    v-show="showProfiles"
+                    class="profile-layer"
+                    transform="translate(55, 0)"
+                >
+                    <g class="profile-axis-layer">
+                        <g class="profile-axis">
+                            <line
+                                class="profile-axis-line"
+                                x1="106"
+                                :y1="m1AxisBaseline"
+                                x2="650"
+                                :y2="m1AxisBaseline"
+                            />
+                            <polygon
+                                class="profile-axis-arrow"
+                                :points="`650,${m1AxisBaseline} 641,${m1AxisBaseline - 4} 641,${m1AxisBaseline + 4}`"
+                            />
+                            <line
+                                class="profile-axis-line"
+                                x1="106"
+                                :y1="profileAxisBottom(m1AxisBaseline)"
+                                x2="106"
+                                :y2="profileAxisTop(m1AxisBaseline)"
+                            />
+                            <polygon
+                                class="profile-axis-arrow"
+                                :points="`106,${profileAxisTop(m1AxisBaseline)} 102,${profileAxisTop(m1AxisBaseline) + 9} 110,${profileAxisTop(m1AxisBaseline) + 9}`"
+                            />
+                            <text
+                                class="profile-axis-label"
+                                x="655"
+                                :y="m1AxisBaseline - 12"
+                                text-anchor="end"
+                            >
+                                Position
+                            </text>
+                            <text
+                                class="profile-axis-label"
+                                x="116"
+                                :y="profileAxisTop(m1AxisBaseline) + 4"
+                                text-anchor="start"
+                            >
+                                {{ profileYAxisLabel }}
+                            </text>
+                            <text
+                                class="profile-axis-tick"
+                                x="96"
+                                :y="m1AxisBaseline + 4"
+                                text-anchor="end"
+                            >
+                                0
+                            </text>
+                            <text
+                                v-show="showRawTitle"
+                                class="profile-axis-tick"
+                                x="96"
+                                :y="m1AxisBaseline - 44"
+                                text-anchor="end"
+                            >
+                                +
+                            </text>
+                            <text
+                                v-show="showRawTitle"
+                                class="profile-axis-tick"
+                                x="96"
+                                :y="m1AxisBaseline + 34"
+                                text-anchor="end"
+                            >
+                                -
+                            </text>
+                        </g>
+                        <g class="profile-axis">
+                            <line
+                                class="profile-axis-line"
+                                x1="106"
+                                :y1="m2AxisBaseline"
+                                x2="650"
+                                :y2="m2AxisBaseline"
+                            />
+                            <polygon
+                                class="profile-axis-arrow"
+                                :points="`650,${m2AxisBaseline} 641,${m2AxisBaseline - 4} 641,${m2AxisBaseline + 4}`"
+                            />
+                            <line
+                                class="profile-axis-line"
+                                x1="106"
+                                :y1="profileAxisBottom(m2AxisBaseline)"
+                                x2="106"
+                                :y2="profileAxisTop(m2AxisBaseline)"
+                            />
+                            <polygon
+                                class="profile-axis-arrow"
+                                :points="`106,${profileAxisTop(m2AxisBaseline)} 102,${profileAxisTop(m2AxisBaseline) + 9} 110,${profileAxisTop(m2AxisBaseline) + 9}`"
+                            />
+                            <text
+                                class="profile-axis-label"
+                                x="655"
+                                :y="m2AxisBaseline - 12"
+                                text-anchor="end"
+                            >
+                                Position
+                            </text>
+                            <text
+                                class="profile-axis-label"
+                                x="116"
+                                :y="profileAxisTop(m2AxisBaseline) + 4"
+                                text-anchor="start"
+                            >
+                                {{ profileYAxisLabel }}
+                            </text>
+                            <text
+                                class="profile-axis-tick"
+                                x="96"
+                                :y="m2AxisBaseline + 4"
+                                text-anchor="end"
+                            >
+                                0
+                            </text>
+                            <text
+                                v-show="showRawTitle"
+                                class="profile-axis-tick"
+                                x="96"
+                                :y="m2AxisBaseline - 44"
+                                text-anchor="end"
+                            >
+                                +
+                            </text>
+                            <text
+                                v-show="showRawTitle"
+                                class="profile-axis-tick"
+                                x="96"
+                                :y="m2AxisBaseline + 34"
+                                text-anchor="end"
+                            >
+                                -
+                            </text>
+                        </g>
+                    </g>
 
                     <!-- M1 profile -->
-                    <text class="profile-label model-a-text" x="70" y="108">
-                        M1
+                    <text
+                        class="profile-label model-a-text"
+                        x="30"
+                        :y="profileAxisTop(m1AxisBaseline) + (profileAxisBottom(m1AxisBaseline) - profileAxisTop(m1AxisBaseline)) / 2"
+                        text-anchor="middle"
+                        dominant-baseline="middle"
+                    >
+                        Profile 1
                     </text>
                     <g class="profile-points">
                         <line
@@ -452,8 +541,14 @@ const showResult = computed(() => s.value >= 5);
                         class="m2-profile-layer"
                         :style="{ transform: `translateX(${m2Shift}px)` }"
                     >
-                        <text class="profile-label model-b-text" x="70" y="236">
-                            M2
+                        <text
+                            class="profile-label model-b-text"
+                            x="30"
+                            :y="profileAxisTop(m2AxisBaseline) + (profileAxisBottom(m2AxisBaseline) - profileAxisTop(m2AxisBaseline)) / 2"
+                            text-anchor="middle"
+                            dominant-baseline="middle"
+                        >
+                            Profile 2
                         </text>
                         <g class="profile-points">
                             <line
@@ -481,16 +576,16 @@ const showResult = computed(() => s.value >= 5);
                         <line
                             class="threshold-line"
                             x1="110"
-                            y1="130"
+                            y1="111"
                             x2="660"
-                            y2="130"
+                            y2="111"
                         />
                         <line
                             class="threshold-line"
                             x1="110"
-                            y1="222"
+                            y1="258"
                             x2="660"
-                            y2="222"
+                            y2="258"
                         />
                     </g>
 
@@ -499,33 +594,33 @@ const showResult = computed(() => s.value >= 5);
                         <rect
                             class="window"
                             x="230"
-                            y="74"
+                            y="54"
                             width="60"
-                            height="80"
+                            height="108"
                             rx="8"
                         />
                         <rect
                             class="window"
                             x="370"
-                            y="74"
+                            y="54"
                             width="60"
-                            height="80"
+                            height="108"
                             rx="8"
                         />
 
-                        <circle class="anchor" cx="260" cy="92" r="6" />
+                        <circle class="anchor" cx="260" cy="73" r="6" />
                         <circle
                             class="anchor secondary"
                             cx="400"
-                            cy="92"
+                            cy="73"
                             r="5"
                         />
                     </g>
 
                     <!-- Result badge -->
                     <g v-show="showResult" class="result-badge">
-                        <rect x="430" y="262" width="230" height="26" rx="12" />
-                        <text x="545" y="280" text-anchor="middle">
+                        <rect x="430" y="352" width="230" height="26" rx="12" />
+                        <text x="545" y="370" text-anchor="middle">
                             max similarity over strand and shift
                         </text>
                     </g>
@@ -633,6 +728,35 @@ const showResult = computed(() => s.value >= 5);
 
 .model-b-text {
     fill: var(--alt-deep);
+}
+
+.profile-axis-line {
+    stroke: var(--muted);
+    stroke-linecap: round;
+    stroke-width: 1.25;
+    transition: x1 650ms ease, y1 650ms ease, x2 650ms ease, y2 650ms ease;
+}
+
+.profile-axis-arrow {
+    fill: var(--muted);
+    transition: points 650ms ease;
+}
+
+.profile-axis-label,
+.profile-axis-tick {
+    fill: var(--muted);
+    font-family: var(--body-font);
+    font-weight: 800;
+}
+
+.profile-axis-label {
+    font-size: 11px;
+    transition: x 650ms ease, y 650ms ease;
+}
+
+.profile-axis-tick {
+    font-size: 10px;
+    transition: opacity 300ms ease, x 650ms ease, y 650ms ease;
 }
 
 .scan-row-label,
