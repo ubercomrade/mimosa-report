@@ -554,7 +554,7 @@ onBeforeUnmount(() => {
                 <g
                     v-show="showProfiles"
                     class="profile-layer"
-                    transform="translate(55, 0)"
+                    transform="translate(15, 0)"
                 >
                     <g class="profile-axis-layer">
                         <g class="profile-axis">
@@ -577,7 +577,7 @@ onBeforeUnmount(() => {
                                 />
                                 <text
                                     class="profile-axis-label"
-                                    x="710"
+                                    x="722"
                                     :y="m1RawBaseline - 10"
                                     text-anchor="end"
                                 >
@@ -650,7 +650,7 @@ onBeforeUnmount(() => {
                                 />
                                 <text
                                     class="profile-axis-label"
-                                    x="710"
+                                    x="722"
                                     :y="m2RawBaseline - 10"
                                     text-anchor="end"
                                 >
