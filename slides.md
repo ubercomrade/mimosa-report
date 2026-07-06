@@ -674,7 +674,7 @@ By comparing recognition profiles, MIMOSA detects links that are partly lost aft
 
 ---
 routeAlias: site-level-support
-clicks: 2
+clicks: 3
 ---
 
 ## Site-level support
@@ -692,28 +692,50 @@ TFBSs were predicted for all motifs at $-\log_{10}(\mathrm{ERR}) = 3$, intersect
 <div
   v-if="$clicks === 1"
   class="absolute"
-  style="left: 582px; top: 345px; width: 134px; height: 21px;"
-  v-mark="{ at: 1, type: 'box', color: '#000000', strokeWidth: 2, padding: 0 }"
+  style="left: 66px; top: 390px; width: 1055px; height: 81px;"
+  v-mark="{ at: 1, type: 'box', color: '#9a4f48', strokeWidth: 4, padding: 0 }"
+></div>
+
+<div
+  v-if="$clicks === 3"
+  class="absolute"
+  style="left: 99px; top: 353px; width: 50px; height: 81px;"
+  v-mark="{ at: 1, type: 'box', color: '#FF9E20', strokeWidth: 4, padding: 0 }"
+></div>
+
+<div
+  v-if="$clicks === 3"
+  class="absolute"
+  style="left: 289px; top: 353px; width: 70px; height: 81px;"
+  v-mark="{ at: 1, type: 'box', color: '#FF9E20', strokeWidth: 4, padding: 0 }"
+></div>
+
+<div
+  v-if="$clicks === 3"
+  class="absolute"
+  style="left: 386px; top: 353px; width: 40px; height: 81px;"
+  v-mark="{ at: 1, type: 'box', color: '#FF9E20', strokeWidth: 4, padding: 0 }"
 ></div>
 
 
-<Note>
-PWM-1 and PWM-2 form no strand-matched overlap clusters; BaMM overlaps both spacer variants.
-</Note>
+<div
+  v-if="$clicks === 2"
+  class="absolute"
+  style="left: 147px; top: 353px; width: 145px; height: 118px;"
+  v-mark="{ at: 1, type: 'box', color: '#FF9E20', strokeWidth: 4, padding: 0 }"
+></div>
 
----
-routeAlias: interpretation
----
+<div
+  v-if="$clicks === 2"
+  class="absolute"
+  style="left: 469px; top: 353px; width: 143px; height: 118px;"
+  v-mark="{ at: 1, type: 'box', color: '#FF9E20', strokeWidth: 4, padding: 0 }"
+></div>
 
-## Interpretation
 
-<CardGrid :columns="2">
-  <Card title="What the PWMs show" text="Two AP-1/CRE-like spacer variants are separated into two motifs." />
-  <Card title="What BaMM/Slim show" text="A flexible model can recognize both variants as one broader specificity." />
-</CardGrid>
+<Note v-click="1">
+    <span v-mark="{ at: 1, type: 'underline', color: '#9a4f48', iterations: 3 }">PWM-1 and PWM-2 remain separated at the site level</span>; while <span v-mark="{ at: 2, type: 'underline', color: '#FF9E20', iterations: 3 }">BaMM shares sites with</span> both spacer variants: <span v-mark="{ at: 2, type: 'underline', color: '#FF9E20', iterations: 3 }">PWM-1 (1-bp spacer)</span> and <span v-mark="{ at: 3, type: 'underline', color: '#FF9E20', iterations: 3 }">PWM-2 (2-bp spacer)</span>
 
-<Note>
-MIMOSA makes this visible without first flattening each model into a single PWM.
 </Note>
 
 ---
@@ -722,15 +744,29 @@ routeAlias: take-home
 
 ## Conclusion
 
-1. MIMOSA compares **recognition profiles**, not motif parameters.
-2. It stays close to strong established tools in a HOCOMOCO retrieval benchmark.
-3. In the ATF3 case, it separates "two PWM spacer variants" from "one flexible model recognizing both".
+<div class="grid-60 conclusion-grid">
+  <div>
+    <ol>
+      <li>MIMOSA compares <strong>recognition profiles</strong>, not motif parameters.</li>
+      <li>It stays close to strong established tools in a HOCOMOCO retrieval benchmark.</li>
+      <li>It reveals that BaMM/Slim recognize both PWM spacer variants without flattening models to PWMs.</li>
+    </ol>
+    <p><strong>Software:</strong></p>
+    <ul>
+      <li><a href="https://github.com/ubercomrade/mimosa">github.com/ubercomrade/mimosa</a></li>
+      <li><a href="https://pypi.org/project/mimosa-tool/">pypi.org/project/mimosa-tool</a></li>
+    </ul>
+  </div>
 
-<Callout type="warn">
-Limitations to remember: profile sequence set, ERR calibration, recognition threshold, and empirical null model.
-</Callout>
-
-Software: [github.com/ubercomrade/mimosa](https://github.com/ubercomrade/mimosa)
+  <Card title="Repository">
+    <img
+      class="conclusion-qr"
+      src="./assets/mimosa_github_qr.png"
+      alt="QR code linking to the MIMOSA GitHub repository"
+    />
+    <p class="qr-caption">Scan for GitHub repository</p>
+  </Card>
+</div>
 
 ---
 layout: section
@@ -741,7 +777,6 @@ routeAlias: backup
 <Eyebrow>Backup</Eyebrow>
 
 # Additional details
-
 
 ---
 routeAlias: err-calibration-null

@@ -428,6 +428,23 @@ body,
     align-items: center;
 }
 
+.conclusion-grid {
+    align-items: start;
+}
+
+.conclusion-qr {
+    display: block;
+    width: 230px;
+    margin: 8px auto 0;
+}
+
+.qr-caption {
+    margin-top: 12px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
 .grid-45 {
     display: grid;
     grid-template-columns: 0.45fr 0.55fr;
