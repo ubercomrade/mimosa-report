@@ -10,6 +10,7 @@ colorSchema: light
 aspectRatio: 16/9
 canvasWidth: 1280
 transition: slide-left
+routerMode: hash
 comark: true
 layout: cover
 class: title-slide
@@ -111,15 +112,15 @@ A PWM is easy to interpret: each position contributes separately to the score of
 <CardGrid :columns="3" class="card-grid-size-45-28-28 card-grid-bottom-media">
     <Card title="Dimerization">
         <p>A partner TF can influence binding affinity at TFBSs.<sup class="cite">6</sup></p>
-        <img class="card-media" :src="'assets/dimerization.svg'" alt="Dimerization schematic" />
+        <img class="card-media" src="./assets/dimerization.svg" alt="Dimerization schematic" />
     </Card>
     <Card title="Flanks">
         <p>Flanking regions can either increase or decrease affinity for the same binding site.<sup class="cite">7</sup></p>
-        <img class="card-media" :src="'assets/context.svg'" alt="Flanking sequence context schematic" />
+        <img class="card-media" src="./assets/context.svg" alt="Flanking sequence context schematic" />
     </Card>
     <Card title="Conformation">
         <p>Some TFs can bind sites that differ substantially from the canonical motif.<sup class="cite">8</sup></p>
-        <img class="card-media" :src="'assets/conformation.svg'" alt="Conformation-dependent binding schematic" />
+        <img class="card-media" src="./assets/conformation.svg" alt="Conformation-dependent binding schematic" />
     </Card>
 </CardGrid>
 
@@ -796,10 +797,10 @@ So one flexible model can cover what is split into two PWM motifs.
 
 <CardGrid :columns="2" style="min-height: 460px;">
     <Card title="Profile-based comparison (Cosine)" text="Compares the original motif models by their calibrated recognition profiles">
-        <img class="card-media" :src="'assets/graph_cosine.svg'" alt="Flanking sequence context schematic" style="width: 100%; max-height: 350px; object-fit: contain;"/>
+        <img class="card-media" src="./assets/graph_cosine.svg" alt="Flanking sequence context schematic" style="width: 100%; max-height: 350px; object-fit: contain;"/>
     </Card>
   <Card title="PFM-reconstruction comparison (PCC)" text="Motifs are summarized as PFMs reconstructed from predicted binding sites">
-      <img class="card-media" :src="'assets/graph_pcc.svg'" alt="Flanking sequence context schematic" style="width: 100%; max-height: 350px; object-fit: contain;"/>
+      <img class="card-media" src="./assets/graph_pcc.svg" alt="Flanking sequence context schematic" style="width: 100%; max-height: 350px; object-fit: contain;"/>
   </Card>
 </CardGrid>
 

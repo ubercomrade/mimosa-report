@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "slidev --open",
-    "build": "slidev build --out dist",
+    "build": "slidev build --out dist && pnpm run copy-static-assets",
+    "build:pages": "slidev build --out dist --base ./ && pnpm run copy-static-assets",
+    "copy-static-assets": "mkdir -p dist/assets && cp -R assets/. dist/assets/",
     "export": "slidev export --output MIMOSA_BGRS_2026_slidev.pdf"
   },
   "dependencies": {

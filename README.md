@@ -22,7 +22,7 @@ pnpm run export     # -> MIMOSA_BGRS_2026_slidev.pdf
 For GitHub Pages, build with the repository base path:
 
 ```fish
-pnpm exec slidev build --out dist --base /mimosa-report/
+pnpm run build:pages
 ```
 
 The deploy workflow in `.github/workflows/deploy.yml` does this automatically on
