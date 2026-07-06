@@ -17,6 +17,7 @@ const scanSequence = [
     "C",
     "T",
     "A",
+    "T",
     "G",
     "C",
     "A",
@@ -36,8 +37,8 @@ const scanModels = [
         length: 4,
         y: 76,
         scores: [
-            -1.2, 0.8, -0.6, 2.1, -1.0, 1.4, -1.5, 0.6, -0.3, 1.7, -0.9, 2.4,
-            0.5, -0.7,
+            -1.2, 0.8, -0.6, 2.1, -1.0, 1.4, -0.4, -1.5, 0.6, -0.3, 1.7, -0.9,
+            2.4, 0.5, -0.7,
         ],
     },
     {
@@ -46,7 +47,8 @@ const scanModels = [
         length: 6,
         y: 222,
         scores: [
-            -0.8, 1.3, -1.1, 2.0, 0.4, -1.4, 1.8, -0.5, 2.2, -0.9, 0.7, -1.2,
+            -0.8, 1.3, -1.1, 2.0, 0.4, -1.4, 0.2, 1.8, -0.5, 2.2, -0.9, 0.7,
+            -1.2,
         ],
     },
 ];
@@ -56,8 +58,12 @@ const scanLabelX = scanBaseX - 18;
 const scanCenterX = scanBaseX + ((scanSequence.length - 1) * scanBaseWidth) / 2;
 const scanStepDuration = 200;
 const scanFinishPause = 2000;
+const alignmentStepDuration = 1200;
+const alignmentResultPause = 1800;
 const scanPos = ref(0);
+const alignmentFrame = ref(-1);
 let scanTimer = null;
+let alignmentTimer = null;
 
 const scanCycleLength = computed(
     () => scanSequence.length - scanModels[0].length + 1,
@@ -147,16 +153,25 @@ const m2Xs = Array.from(
 );
 
 const m1ErrScores = [
-    0.3, 0.4, 0.2, 0.5, 0.3, 4.0, 0.4, 0.3, 0.2, 0.4, 3.9, 0.5, 0.3,
-    0.4,
+    0.3, 0.4, 0.2, 0.5, 0.3, 4.0, 0.4, 0.4, 0.3, 0.2, 0.4, 3.9, 0.5, 0.3, 0.4,
 ];
-const m2ErrScores = [0.3, 0.4, 0.3, 3.6, 0.5, 0.4, 0.2, 0.4, 3.5, 0.3, 0.5, 0.3];
+const m2ErrScores = [
+    0.3, 0.4, 0.3, 3.6, 0.5, 0.4, 0.3, 0.2, 0.4, 3.5, 0.3, 0.5, 0.3,
+];
 
-const m1AxisBaseline = computed(() => (s.value >= 3 ? m1NormBaseline : m1RawBaseline));
-const m2AxisBaseline = computed(() => (s.value >= 3 ? m2NormBaseline : m2RawBaseline));
+const m1AxisBaseline = computed(() =>
+    s.value >= 3 ? m1NormBaseline : m1RawBaseline,
+);
+const m2AxisBaseline = computed(() =>
+    s.value >= 3 ? m2NormBaseline : m2RawBaseline,
+);
 const m1XAxisShift = computed(() => m1AxisBaseline.value - m1RawBaseline);
 const m2XAxisShift = computed(() => m2AxisBaseline.value - m2RawBaseline);
-const profileYAxisLabel = computed(() => (s.value >= 3 ? "-log10(ERR)" : "Score"));
+const profileYAxisLabel = computed(() =>
+    s.value >= 3 ? "-log10(ERR)" : "Score",
+);
+const profileThreshold = 3.0;
+const profileWindowRadius = 2;
 
 function rawScoreToY(score, baseline) {
     return baseline - score * rawScoreScale;
@@ -173,6 +188,101 @@ function profileAxisBottom(baseline) {
 function profileAxisTop(baseline) {
     return s.value >= 3 ? baseline - 116 : baseline - 64;
 }
+
+function profileWindowY(baseline) {
+    return profileAxisTop(baseline) - 6;
+}
+
+function profileWindowHeight(baseline) {
+    return profileAxisBottom(baseline) - profileAxisTop(baseline) + 12;
+}
+
+const m1AnchorIndexes = computed(() =>
+    m1ErrScores
+        .map((score, index) => ({ score, index }))
+        .filter(({ score }) => score >= profileThreshold)
+        .map(({ index }) => index),
+);
+
+const profileWindows = computed(() =>
+    m1AnchorIndexes.value.map((anchor) => ({
+        anchor,
+        start: Math.max(0, anchor - profileWindowRadius),
+        end: Math.min(m1ErrScores.length - 1, anchor + profileWindowRadius),
+    })),
+);
+
+function profileWindowX(window) {
+    return profileBaseX + window.start * profileDx - profileDx / 2;
+}
+
+function profileWindowWidth(window) {
+    return (window.end - window.start + 1) * profileDx;
+}
+
+function similarityForShift(shift) {
+    const pairs = profileWindows.value.flatMap((window) =>
+        Array.from({ length: window.end - window.start + 1 }, (_, offset) => {
+            const position = window.start + offset;
+            const m2Index = position - shift;
+
+            if (m2Index < 0 || m2Index >= m2ErrScores.length) {
+                return null;
+            }
+
+            return [m1ErrScores[position], m2ErrScores[m2Index]];
+        }).filter(Boolean),
+    );
+
+    const dot = pairs.reduce((sum, [a, b]) => sum + a * b, 0);
+    const norm1 = Math.sqrt(pairs.reduce((sum, [a]) => sum + a * a, 0));
+    const norm2 = Math.sqrt(pairs.reduce((sum, [, b]) => sum + b * b, 0));
+
+    if (norm1 === 0 || norm2 === 0) {
+        return 0;
+    }
+
+    return dot / (norm1 * norm2);
+}
+
+const alignmentTrials = computed(() =>
+    [1, 2, 3].map((shift) => ({
+        shift,
+        similarity: similarityForShift(shift),
+    })),
+);
+
+const bestAlignmentTrial = computed(() =>
+    alignmentTrials.value.reduce(
+        (best, trial) => (trial.similarity > best.similarity ? trial : best),
+        alignmentTrials.value[0],
+    ),
+);
+
+const showAlignmentBest = computed(
+    () => alignmentFrame.value >= alignmentTrials.value.length,
+);
+
+const visibleAlignmentTrials = computed(() =>
+    alignmentTrials.value.slice(
+        0,
+        showAlignmentBest.value
+            ? alignmentTrials.value.length
+            : Math.max(0, alignmentFrame.value + 1),
+    ),
+);
+
+const currentAlignmentShift = computed(() => {
+    if (alignmentFrame.value < 0) {
+        return 0;
+    }
+
+    if (showAlignmentBest.value) {
+        return bestAlignmentTrial.value.shift;
+    }
+
+    return alignmentTrials.value[alignmentFrame.value]?.shift ?? 1;
+});
 
 const m1Points = computed(() =>
     m1Xs.map((x, i) => ({
@@ -193,7 +303,30 @@ const m2Points = computed(() =>
     })),
 );
 
-const m2Shift = computed(() => (s.value >= 5 ? -112 : 0));
+const m2Shift = computed(() =>
+    s.value >= 5 ? currentAlignmentShift.value * profileDx : 0,
+);
+
+const profileAlignmentLinks = computed(() =>
+    profileWindows.value.flatMap((window) =>
+        Array.from({ length: window.end - window.start + 1 }, (_, offset) => {
+            const position = window.start + offset;
+            const m2Index = position - currentAlignmentShift.value;
+
+            if (m2Index < 0 || m2Index >= m2Points.value.length) {
+                return null;
+            }
+
+            return {
+                key: `${window.anchor}-${position}-${m2Index}`,
+                x1: m1Points.value[position].x,
+                y1: m1Points.value[position].y,
+                x2: m2Points.value[m2Index].x + m2Shift.value,
+                y2: m2Points.value[m2Index].y,
+            };
+        }).filter(Boolean),
+    ),
+);
 
 const showScan = computed(() => s.value === 1);
 const showProfiles = computed(() => s.value >= 2);
@@ -202,6 +335,56 @@ const showCalTitle = computed(() => s.value >= 3);
 const showThresholds = computed(() => s.value >= 4);
 const showWindows = computed(() => s.value >= 4);
 const showResult = computed(() => s.value >= 5);
+
+function startAlignmentLoop() {
+    if (alignmentTimer !== null) {
+        return;
+    }
+
+    const delay = showAlignmentBest.value
+        ? alignmentResultPause
+        : alignmentStepDuration;
+
+    alignmentTimer = setTimeout(() => {
+        alignmentFrame.value = showAlignmentBest.value
+            ? -1
+            : alignmentFrame.value + 1;
+        alignmentTimer = null;
+
+        if (s.value >= 5) {
+            startAlignmentLoop();
+        }
+    }, delay);
+}
+
+function stopAlignmentLoop({ reset = true } = {}) {
+    if (alignmentTimer !== null) {
+        clearTimeout(alignmentTimer);
+        alignmentTimer = null;
+    }
+
+    if (reset) {
+        alignmentFrame.value = -1;
+    }
+}
+
+watch(s, (step) => {
+    if (step >= 5) {
+        startAlignmentLoop();
+    } else {
+        stopAlignmentLoop();
+    }
+});
+
+onMounted(() => {
+    if (s.value >= 5) {
+        startAlignmentLoop();
+    }
+});
+
+onBeforeUnmount(() => {
+    stopAlignmentLoop({ reset: false });
+});
 </script>
 
 <template>
@@ -226,7 +409,7 @@ const showResult = computed(() => s.value >= 5);
                             class="sequence-pill"
                             :x="scanBaseX - 14"
                             :y="model.y - 18"
-                            :width="scanSequence.length * scanBaseWidth + 28"
+                            :width="scanSequence.length * scanBaseWidth + 0"
                             height="44"
                             rx="14"
                         />
@@ -377,23 +560,25 @@ const showResult = computed(() => s.value >= 5);
                         <g class="profile-axis">
                             <g
                                 class="profile-x-axis"
-                                :style="{ transform: `translateY(${m1XAxisShift}px)` }"
+                                :style="{
+                                    transform: `translateY(${m1XAxisShift}px)`,
+                                }"
                             >
                                 <line
                                     class="profile-axis-line"
                                     x1="106"
                                     :y1="m1RawBaseline"
-                                    x2="650"
+                                    x2="680"
                                     :y2="m1RawBaseline"
                                 />
                                 <polygon
                                     class="profile-axis-arrow"
-                                    :points="`650,${m1RawBaseline} 641,${m1RawBaseline - 4} 641,${m1RawBaseline + 4}`"
+                                    :points="`680,${m1RawBaseline} 671,${m1RawBaseline - 4} 671,${m1RawBaseline + 4}`"
                                 />
                                 <text
                                     class="profile-axis-label"
-                                    x="655"
-                                    :y="m1RawBaseline - 12"
+                                    x="710"
+                                    :y="m1RawBaseline - 10"
                                     text-anchor="end"
                                 >
                                     Position
@@ -448,23 +633,25 @@ const showResult = computed(() => s.value >= 5);
                         <g class="profile-axis">
                             <g
                                 class="profile-x-axis"
-                                :style="{ transform: `translateY(${m2XAxisShift}px)` }"
+                                :style="{
+                                    transform: `translateY(${m2XAxisShift}px)`,
+                                }"
                             >
                                 <line
                                     class="profile-axis-line"
                                     x1="106"
                                     :y1="m2RawBaseline"
-                                    x2="650"
+                                    x2="680"
                                     :y2="m2RawBaseline"
                                 />
                                 <polygon
                                     class="profile-axis-arrow"
-                                    :points="`650,${m2RawBaseline} 641,${m2RawBaseline - 4} 641,${m2RawBaseline + 4}`"
+                                    :points="`680,${m2RawBaseline} 671,${m2RawBaseline - 4} 671,${m2RawBaseline + 4}`"
                                 />
                                 <text
                                     class="profile-axis-label"
-                                    x="655"
-                                    :y="m2RawBaseline - 12"
+                                    x="710"
+                                    :y="m2RawBaseline - 10"
                                     text-anchor="end"
                                 >
                                     Position
@@ -522,7 +709,12 @@ const showResult = computed(() => s.value >= 5);
                     <text
                         class="profile-label model-a-text"
                         x="30"
-                        :y="profileAxisTop(m1AxisBaseline) + (profileAxisBottom(m1AxisBaseline) - profileAxisTop(m1AxisBaseline)) / 2"
+                        :y="
+                            profileAxisTop(m1AxisBaseline) +
+                            (profileAxisBottom(m1AxisBaseline) -
+                                profileAxisTop(m1AxisBaseline)) /
+                                2
+                        "
                         text-anchor="middle"
                         dominant-baseline="middle"
                     >
@@ -548,20 +740,69 @@ const showResult = computed(() => s.value >= 5);
                         />
                     </g>
 
+                    <g v-show="showWindows" class="profile-window-layer">
+                        <rect
+                            v-for="window in profileWindows"
+                            :key="`m1-window-${window.anchor}`"
+                            class="window profile-window"
+                            :x="profileWindowX(window)"
+                            :y="profileWindowY(m1AxisBaseline)"
+                            :width="profileWindowWidth(window)"
+                            :height="profileWindowHeight(m1AxisBaseline)"
+                            rx="8"
+                        />
+                        <circle
+                            v-for="anchor in m1AnchorIndexes"
+                            :key="`m1-anchor-${anchor}`"
+                            class="anchor"
+                            :cx="m1Points[anchor].x"
+                            :cy="m1Points[anchor].y"
+                            r="6"
+                        />
+                    </g>
+
                     <!-- M2 profile (shifted on step 5) -->
+                    <text
+                        class="profile-label model-b-text"
+                        x="30"
+                        :y="
+                            profileAxisTop(m2AxisBaseline) +
+                            (profileAxisBottom(m2AxisBaseline) -
+                                profileAxisTop(m2AxisBaseline)) /
+                                2
+                        "
+                        text-anchor="middle"
+                        dominant-baseline="middle"
+                    >
+                        Profile 2
+                    </text>
+                    <g v-show="showWindows" class="profile-window-layer">
+                        <rect
+                            v-for="window in profileWindows"
+                            :key="`m2-window-${window.anchor}`"
+                            class="window profile-window"
+                            :x="profileWindowX(window)"
+                            :y="profileWindowY(m2AxisBaseline)"
+                            :width="profileWindowWidth(window)"
+                            :height="profileWindowHeight(m2AxisBaseline)"
+                            rx="8"
+                        />
+                    </g>
+                    <g v-show="showResult" class="profile-alignment-links">
+                        <line
+                            v-for="link in profileAlignmentLinks"
+                            :key="link.key"
+                            class="profile-match-line"
+                            :x1="link.x1"
+                            :y1="link.y1"
+                            :x2="link.x2"
+                            :y2="link.y2"
+                        />
+                    </g>
                     <g
                         class="m2-profile-layer"
                         :style="{ transform: `translateX(${m2Shift}px)` }"
                     >
-                        <text
-                            class="profile-label model-b-text"
-                            x="30"
-                            :y="profileAxisTop(m2AxisBaseline) + (profileAxisBottom(m2AxisBaseline) - profileAxisTop(m2AxisBaseline)) / 2"
-                            text-anchor="middle"
-                            dominant-baseline="middle"
-                        >
-                            Profile 2
-                        </text>
                         <g class="profile-points">
                             <line
                                 v-for="i in m2Points.length - 1"
@@ -588,53 +829,72 @@ const showResult = computed(() => s.value >= 5);
                         <line
                             class="threshold-line"
                             x1="110"
-                            y1="111"
+                            :y1="errScoreToY(profileThreshold, m1NormBaseline)"
                             x2="660"
-                            y2="111"
-                        />
-                        <line
-                            class="threshold-line"
-                            x1="110"
-                            y1="258"
-                            x2="660"
-                            y2="258"
-                        />
-                    </g>
-
-                    <!-- Windows around M1 anchors only -->
-                    <g v-show="showWindows">
-                        <rect
-                            class="window"
-                            x="230"
-                            y="54"
-                            width="60"
-                            height="108"
-                            rx="8"
-                        />
-                        <rect
-                            class="window"
-                            x="370"
-                            y="54"
-                            width="60"
-                            height="108"
-                            rx="8"
-                        />
-
-                        <circle class="anchor" cx="260" cy="73" r="6" />
-                        <circle
-                            class="anchor secondary"
-                            cx="400"
-                            cy="73"
-                            r="5"
+                            :y2="errScoreToY(profileThreshold, m1NormBaseline)"
                         />
                     </g>
 
                     <!-- Result badge -->
-                    <g v-show="showResult" class="result-badge">
-                        <rect x="430" y="352" width="230" height="26" rx="12" />
-                        <text x="545" y="370" text-anchor="middle">
-                            max similarity over strand and shift
+                    <g v-show="showResult" class="similarity-panel">
+                        <rect x="100" y="380" width="530" height="40" rx="12" />
+                        <text
+                            class="similarity-panel-head"
+                            x="190"
+                            y="398"
+                            text-anchor="end"
+                        >
+                            shift
                         </text>
+                        <text
+                            class="similarity-panel-head"
+                            x="190"
+                            y="411"
+                            text-anchor="end"
+                        >
+                            similarity
+                        </text>
+                        <g
+                            v-for="(trial, index) in visibleAlignmentTrials"
+                            :key="`alignment-trial-${trial.shift}`"
+                            class="similarity-column"
+                            :class="{
+                                active:
+                                    !showAlignmentBest &&
+                                    index === alignmentFrame,
+                            }"
+                        >
+                            <text
+                                :x="255 + index * 70"
+                                y="398"
+                                text-anchor="middle"
+                            >
+                                +{{ trial.shift }}
+                            </text>
+                            <text
+                                :x="255 + index * 70"
+                                y="411"
+                                text-anchor="middle"
+                            >
+                                {{ trial.similarity.toFixed(2) }}
+                            </text>
+                        </g>
+                        <g
+                            v-show="showAlignmentBest"
+                            class="best-similarity-badge"
+                        >
+                            <rect
+                                x="485"
+                                y="389"
+                                width="128"
+                                height="22"
+                                rx="9"
+                            />
+                            <text x="549" y="405" text-anchor="middle">
+                                best: +{{ bestAlignmentTrial.shift }},
+                                {{ bestAlignmentTrial.similarity.toFixed(2) }}
+                            </text>
+                        </g>
                     </g>
                 </g>
             </svg>
@@ -750,7 +1010,11 @@ const showResult = computed(() => s.value >= 5);
     stroke: var(--muted);
     stroke-linecap: round;
     stroke-width: 1.25;
-    transition: x1 650ms ease, y1 650ms ease, x2 650ms ease, y2 650ms ease;
+    transition:
+        x1 650ms ease,
+        y1 650ms ease,
+        x2 650ms ease,
+        y2 650ms ease;
 }
 
 .profile-axis-arrow {
@@ -766,12 +1030,17 @@ const showResult = computed(() => s.value >= 5);
 
 .profile-axis-label {
     font-size: 11px;
-    transition: x 650ms ease, y 650ms ease;
+    transition:
+        x 650ms ease,
+        y 650ms ease;
 }
 
 .profile-axis-tick {
     font-size: 10px;
-    transition: opacity 300ms ease, x 650ms ease, y 650ms ease;
+    transition:
+        opacity 300ms ease,
+        x 650ms ease,
+        y 650ms ease;
 }
 
 .scan-row-label,
@@ -912,6 +1181,19 @@ const showResult = computed(() => s.value >= 5);
     transition: transform 650ms ease;
 }
 
+.profile-match-line {
+    stroke: var(--muted);
+    stroke-dasharray: 2 5;
+    stroke-linecap: round;
+    stroke-width: 1;
+    opacity: 0.42;
+    transition:
+        x1 650ms ease,
+        y1 650ms ease,
+        x2 650ms ease,
+        y2 650ms ease;
+}
+
 .threshold-line {
     stroke: var(--warn);
     stroke-dasharray: 8 7;
@@ -935,16 +1217,46 @@ const showResult = computed(() => s.value >= 5);
     stroke-width: 1.8;
 }
 
-.result-badge rect {
+.similarity-panel > rect {
     fill: var(--surface);
     stroke: var(--primary-tint-border);
     stroke-width: 2;
 }
 
-.result-badge text {
-    fill: var(--primary-deep);
+.similarity-panel text {
     font-family: var(--body-font);
-    font-size: 12px;
+}
+
+.similarity-panel-head {
+    fill: var(--primary-deep);
     font-weight: 800;
+}
+
+.similarity-panel-head {
+    font-size: 14px;
+    opacity: 0.82;
+}
+
+.similarity-column text {
+    fill: var(--ink);
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.similarity-column.active text {
+    animation: scan-score-pulse 850ms ease-in-out infinite;
+    fill: var(--primary-deep);
+}
+
+.best-similarity-badge rect {
+    fill: var(--primary-tint);
+    stroke: var(--primary);
+    stroke-width: 1.7;
+}
+
+.best-similarity-badge text {
+    fill: var(--primary-deep);
+    font-size: 14px;
+    font-weight: 900;
 }
 </style>
