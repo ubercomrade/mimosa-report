@@ -26,11 +26,14 @@ exportFilename: MIMOSA_BGRS_2026_slidev
 download: false
 ---
 
-<Eyebrow>BGRS/SB-2026 / MIMOSA</Eyebrow>
+<Eyebrow>BGRS/SB-2026</Eyebrow>
 
 # Representation-independent comparison of transcription factor motifs
 
-Anton V. Tsukanov &middot; Victor G. Levitsky
+Anton V. Tsukanov, PhD (Biology) &middot; Victor G. Levitsky, PhD (Biology)
+
+<span class="small">Institute of Cytology and Genetics SB RAS, Novosibirsk, Russia</span>
+
 
 ---
 layout: two-cols-header
@@ -294,6 +297,7 @@ routeAlias: retrieval-question
 ---
 layout: two-cols-header
 routeAlias: benchmark-design
+class: benchmark-design-slide
 ---
 
 ## Benchmark design
@@ -318,6 +322,7 @@ Does the method rank the corresponding TF motif near the top?
 .two-cols-header {
   display: flex;
   flex-direction: column;
+  justify-content: center;
 }
 </style>
 
@@ -687,7 +692,7 @@ TFBSs were predicted for all motifs at $-\log_{10}(\mathrm{ERR}) = 3$, intersect
 <div style="height: 24px"></div>
 
 <FigurePanel
-  src="plots/example_PEAKS037311_ATF3_Q60765_MACS2/supervenn.png"
+  src="assets/supervenn.png"
   alt="Supervenn site-overlap plot for ATF3 motif models"
   variant="wide"
 />
@@ -771,6 +776,9 @@ routeAlias: take-home
   </Card>
 </div>
 
+<Note>
+The research was funded by the Russian Science Foundation, 25-74-00116
+</Note>
 ---
 routeAlias: references
 class: references-slide
@@ -831,7 +839,7 @@ routeAlias: ranking-concordance
 ## Ranking concordance
 
 <FigurePanel
-  src="plots/Compare/Kendall_heatmap.png"
+  src="assets/Kendall_heatmap.png"
   alt="Kendall concordance heatmap for motif-comparison rankings"
   variant="tall"
 />
@@ -847,7 +855,7 @@ routeAlias: annotation-details-rr
 ## Annotation details: reciprocal rank
 
 <FigurePanel
-  src="plots/example_PEAKS037311_ATF3_Q60765_MACS2/annotation_rr_tf_level.png"
+  src="assets/annotation_rr_tf_level.png"
   alt="Reciprocal-rank annotation details at TF level"
   variant="tall"
 />
@@ -859,7 +867,7 @@ routeAlias: annotation-details-significance
 ## Annotation details: significance
 
 <FigurePanel
-  src="plots/example_PEAKS037311_ATF3_Q60765_MACS2/annotation_significance_tf_level.png"
+  src="assets/annotation_significance_tf_level.png"
   alt="Significance annotation details at TF level"
   variant="tall"
 />
@@ -871,7 +879,7 @@ routeAlias: alignment-pwm1-pwm2
 ## Profile alignment: PWM-1 vs PWM-2
 
 <FigurePanel
-  src="plots/example_PEAKS037311_ATF3_Q60765_MACS2/compare_profiles_PWM-1_vs_PWM-2.png"
+  src="assets/compare_profiles_PWM-1_vs_PWM-2.png"
   alt="Profile alignment comparing PWM-1 and PWM-2"
   variant="wide"
 />
@@ -883,7 +891,7 @@ routeAlias: alignment-pwm1-bamm
 ## Profile alignment: PWM-1 vs BaMM
 
 <FigurePanel
-  src="plots/example_PEAKS037311_ATF3_Q60765_MACS2/compare_profiles_PWM-1_vs_BaMM.png"
+  src="assets/compare_profiles_PWM-1_vs_BaMM.png"
   alt="Profile alignment comparing PWM-1 and BaMM"
   variant="wide"
 />
@@ -895,7 +903,7 @@ routeAlias: alignment-pwm2-bamm
 ## Profile alignment: PWM-2 vs BaMM
 
 <FigurePanel
-  src="plots/example_PEAKS037311_ATF3_Q60765_MACS2/compare_profiles_PWM-2_vs_BaMM.png"
+  src="assets/compare_profiles_PWM-2_vs_BaMM.png"
   alt="Profile alignment comparing PWM-2 and BaMM"
   variant="wide"
 />
