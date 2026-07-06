@@ -334,6 +334,7 @@ const showRawTitle = computed(() => s.value === 2);
 const showCalTitle = computed(() => s.value >= 3);
 const showThresholds = computed(() => s.value >= 4);
 const showWindows = computed(() => s.value >= 4);
+const showAnchorCallout = computed(() => s.value === 4);
 const showResult = computed(() => s.value >= 5);
 
 function startAlignmentLoop() {
@@ -394,6 +395,19 @@ onBeforeUnmount(() => {
             aria-label="Stepwise schematic of MIMOSA recognition-profile comparison"
         >
             <svg viewBox="0 0 760 380" role="img">
+                <defs>
+                    <marker
+                        id="anchor-arrowhead"
+                        markerHeight="7"
+                        markerWidth="7"
+                        orient="auto"
+                        refX="6"
+                        refY="3.5"
+                    >
+                        <path class="anchor-callout-arrowhead" d="M0,0 L7,3.5 L0,7 Z" />
+                    </marker>
+                </defs>
+
                 <!-- Scanning step -->
                 <g
                     v-show="showScan"
@@ -758,6 +772,21 @@ onBeforeUnmount(() => {
                             :cx="m1Points[anchor].x"
                             :cy="m1Points[anchor].y"
                             r="6"
+                        />
+                    </g>
+                    <g v-show="showAnchorCallout" class="anchor-callout">
+                        <text x="390" y="34" text-anchor="middle">
+                            Anchor positions
+                        </text>
+                        <line
+                            v-for="anchor in m1AnchorIndexes"
+                            :key="`anchor-callout-arrow-${anchor}`"
+                            class="anchor-callout-arrow"
+                            x1="390"
+                            y1="42"
+                            :x2="m1Points[anchor].x"
+                            :y2="m1Points[anchor].y - 10"
+                            marker-end="url(#anchor-arrowhead)"
                         />
                     </g>
 
@@ -1210,11 +1239,28 @@ onBeforeUnmount(() => {
     opacity: 0.72;
 }
 
+.anchor-callout text {
+    fill: var(--primary-deep);
+    font-family: var(--body-font);
+    font-size: 12px;
+    font-weight: 900;
+}
+
+.anchor-callout-arrow {
+    stroke: var(--primary-deep);
+    stroke-linecap: round;
+    stroke-width: 1.3;
+    opacity: 0.9;
+}
+
+.anchor-callout-arrowhead {
+    fill: var(--primary-deep);
+}
+
 .window {
-    fill: var(--warn-tint);
-    stroke: var(--warn);
-    stroke-dasharray: 8 5;
-    stroke-width: 1.8;
+    fill: rgba(11, 127, 131, 0.045);
+    stroke: var(--primary-deep);
+    stroke-width: 1.2;
 }
 
 .similarity-panel > rect {
