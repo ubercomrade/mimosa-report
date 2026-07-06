@@ -14,6 +14,7 @@ comark: true
 layout: cover
 class: title-slide
 routeAlias: title
+routerMode: hash
 fonts:
   provider: none
   sans: Verdana
@@ -42,7 +43,6 @@ The main idea is simple: instead of comparing internal parameters of motif model
 
 ---
 layout: two-cols-header
-routeAlias: why-motifs-matter
 ---
 
 ## Why transcription factor motifs matter
@@ -70,7 +70,6 @@ This prediction is one of the basic steps in studying transcription regulation.
 -->
 
 ---
-routeAlias: pwm-standard
 clicks: 6
 ---
 
@@ -108,7 +107,6 @@ A PWM is easy to interpret: each position contributes separately to the score of
 -->
 
 ---
-routeAlias: beyond-independent-positions
 ---
 
 ## Sources of positional dependencies
@@ -142,7 +140,6 @@ Alternative models, such as BaMM, Slim, and DIMONT, try to keep this information
 -->
 
 ---
-routeAlias: binding-to-annotation
 ---
 
 ## From binding data to TF annotation
@@ -267,7 +264,6 @@ So alternative models often have to be converted before annotation, and this con
 ---
 layout: section
 class: section-divider
-routeAlias: mimosa-idea
 ---
 
 <Eyebrow>MIMOSA idea</Eyebrow>
@@ -282,7 +278,6 @@ Instead, we compare behavior: do two models recognize the same DNA positions wit
 -->
 
 ---
-routeAlias: recognition-profile-comparison
 clicks: 5
 ---
 
@@ -325,7 +320,6 @@ For every shift, MIMOSA computes a similarity score inside the local windows.
 -->
 
 ---
-routeAlias: formula-view
 ---
 
 ## Similarity metrics used in MIMOSA
@@ -367,7 +361,6 @@ It does not mean that the internal parameters of the models are identical.
 ---
 layout: section
 class: section-divider
-routeAlias: retrieval-question
 ---
 
 <Eyebrow>Benchmark against established tools</Eyebrow>
@@ -382,7 +375,6 @@ If I use one motif as a query, can the method place the corresponding transcript
 
 ---
 layout: two-cols-header
-routeAlias: benchmark-design
 class: benchmark-design-slide
 ---
 
@@ -422,7 +414,6 @@ We compared MIMOSA with Tomtom, STAMP, MACRO-APE, and MoSBAT.
 -->
 
 ---
-routeAlias: metrics
 ---
 
 ## Metrics for tool comparison
@@ -460,7 +451,6 @@ Recall at five is close to practical use, because a researcher often checks seve
 
 
 ---
-routeAlias: benchmark-result
 clicks: 4
 ---
 
@@ -567,7 +557,6 @@ The important point is that MIMOSA is competitive with them, while also supporti
 ---
 layout: section
 class: section-divider
-routeAlias: where-mimosa-helps
 ---
 
 <Eyebrow>ATF3 case study</Eyebrow>
@@ -582,7 +571,6 @@ The goal was not only to annotate the motifs, but also to understand whether dif
 
 ---
 layout: two-cols-header
-routeAlias: atf3-case
 ---
 
 ## Data
@@ -611,7 +599,6 @@ So the main question is: how similar are the motifs recovered from the same expe
 -->
 
 ---
-routeAlias: same-data-different-outputs
 clicks: 6
 ---
 
@@ -809,7 +796,6 @@ So one flexible model can cover what is split into two PWM motifs.
 -->
 
 ---
-routeAlias: pairwise-profile-graph
 ---
 
 ## Pairwise comparison graph
@@ -838,7 +824,6 @@ This is exactly the situation where profile-based comparison can keep more infor
 -->
 
 ---
-routeAlias: site-level-support
 clicks: 3
 ---
 
@@ -917,7 +902,6 @@ This supports the interpretation that BaMM integrates both spacer variants in on
 -->
 
 ---
-routeAlias: take-home
 ---
 
 ## Conclusion
@@ -959,7 +943,6 @@ This research was funded by the Russian Science Foundation.
 Thank you for your attention.
 -->
 ---
-routeAlias: references
 class: references-slide
 ---
 
@@ -998,7 +981,6 @@ This slide is here if there are questions about sources.
 ---
 layout: section
 class: section-divider
-routeAlias: backup
 ---
 
 <Eyebrow>Backup</Eyebrow>
@@ -1011,7 +993,6 @@ I will move here only if there is time or if there is a specific question.
 -->
 
 ---
-routeAlias: err-calibration-null
 ---
 
 ## ERR calibration and null
@@ -1029,7 +1010,6 @@ For significance, we used shuffled HOCOMOCO motifs as an empirical null distribu
 -->
 
 ---
-routeAlias: ranking-concordance
 ---
 
 ## Ranking concordance
@@ -1052,7 +1032,6 @@ This means different tools emphasize different aspects of motif similarity, espe
 -->
 
 ---
-routeAlias: annotation-details-rr
 ---
 
 ## Annotation details: reciprocal rank
@@ -1070,7 +1049,6 @@ The main message is that profile-based comparison supports AP-1/CRE-like, ATF3-c
 -->
 
 ---
-routeAlias: annotation-details-significance
 ---
 
 ## Annotation details: significance
@@ -1089,7 +1067,6 @@ This helps separate strong ATF3-compatible matches from weaker or divergent case
 -->
 
 ---
-routeAlias: alignment-pwm1-pwm2
 ---
 
 ## Profile alignment: PWM-1 vs PWM-2
@@ -1107,7 +1084,6 @@ This means that the two PWM models recognize different subsets of AP-1/CRE-like 
 -->
 
 ---
-routeAlias: alignment-pwm1-bamm
 ---
 
 ## Profile alignment: PWM-1 vs BaMM
@@ -1125,7 +1101,6 @@ When anchoring on BaMM sites, PWM-1 captures only part of the BaMM signal, becau
 -->
 
 ---
-routeAlias: alignment-pwm2-bamm
 ---
 
 ## Profile alignment: PWM-2 vs BaMM

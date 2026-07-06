@@ -20,5 +20,8 @@
       "slidev-component-pager",
       "fancy-arrow"
     ]
+  },
+  "devDependencies": {
+    "playwright-chromium": "^1.61.1"
   }
 }
