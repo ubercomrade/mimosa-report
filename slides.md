@@ -47,13 +47,13 @@ routeAlias: why-motifs-matter
 - Transcription factors (TFs) bind specific DNA sites and interact with the transcriptional complex<sup class="cite">1</sup>
 - TFs control gene expression programs.
 - One TF can bind to a range of similar DNA sequences.
-- A **motif** captures the allowed variation within them.<sup class="cite">2</sup>
+- A **motif** captures sequence variation across these binding sites.<sup class="cite">2</sup>
 
 
 ::right::
 
 <Callout>
-Motifs let us predict transcription factor binding sites (TFBS) in the genome, which makes it possible to study transcription regulation.<sup class="cite">2</sup>
+Motifs let us predict transcription factor binding sites (TFBSs) in the genome, which makes it possible to study transcription regulation.<sup class="cite">2</sup>
 </Callout>
 
 ---
@@ -67,7 +67,7 @@ clicks: 6
   <section class="card pwm-standard-copy">
     <ul class="pwm-theses">
       <li>A PWM is built from aligned binding sites and scores candidate sites as a sum of position-specific contributions<sup class="cite">3</sup></li>
-      <li v-click="4">PWM remains the de facto standard for motif representation and analysis<sup class="cite">3</sup></li>
+      <li v-click="4">PWMs remain the de facto standard for motif representation and analysis<sup class="cite">3</sup></li>
       <li v-click="5">However, real TF binding can involve dependencies between motif positions, so some binding sites may be poorly captured by PWM alone<sup class="cite">4,5</sup></li>
     </ul>
   </section>
@@ -83,7 +83,7 @@ clicks: 6
 routeAlias: beyond-independent-positions
 ---
 
-## Nature of dependency positions
+## Sources of positional dependencies
 
 <CardGrid :columns="3" class="card-grid-size-45-28-28 card-grid-bottom-media">
     <Card title="Dimerization">
@@ -101,7 +101,7 @@ routeAlias: beyond-independent-positions
 </CardGrid>
 
 <Note>
-Models such as BaMM<sup class="cite">9</sup>, Slim<sup class="cite">10</sup> and DIMONT<sup class="cite">11</sup> try to preserve this extra structure instead of flattening it into one matrix.
+Models such as BaMM<sup class="cite">9</sup>, Slim<sup class="cite">10</sup> and DIMONT<sup class="cite">11</sup> preserve such dependencies instead of flattening them into a single matrix.
 </Note>
 
 ---
@@ -114,7 +114,7 @@ routeAlias: binding-to-annotation
   <div class="pipeline-flow-row">
     <section v-click="1" class="card" data-id="card-1">
       <h3>1 &middot; Experimental data</h3>
-      <div class="callout">Read-to-sequence preprocessing</div>
+      <div class="callout">Read preprocessing and sequence extraction</div>
       <p class="pipeline-subhead">In vitro</p>
       <div class="badge-row">
         <span class="badge">HT-SELEX</span>
@@ -206,7 +206,7 @@ routeAlias: binding-to-annotation
 
 
 <Note v-click="5" data-id="bottleneck-note">
-  <span v-mark="{ at: 5, type: 'underline', color: '#9a4f48', iterations: 3 }">Annotation tools exist only for PWM motif models, but not for alternative motif models.</span><sup class="cite">12-14</sup> Non-PWM models often have to be converted before annotation.
+  <span v-mark="{ at: 5, type: 'underline', color: '#9a4f48', iterations: 3 }">Most established annotation tools are designed for PWM/PFM motif models, not alternative motif models.</span><sup class="cite">12-14</sup> Non-PWM models often have to be converted before annotation.
 </Note>
 
 
@@ -236,11 +236,11 @@ clicks: 5
 <div class="mimosa-method-grid">
   <section class="card mimosa-method-copy">
     <ol class="mimosa-method-steps">
-      <li>Scan a sequences with both motifs (<i>Motif 1</i>, <i>Motif 2</i>)</li>
-      <li v-click="1">Get score profiles Profile 1 and Profile 2</li>
+      <li>Scan the same sequence set with both motifs (<i>Motif 1</i>, <i>Motif 2</i>)</li>
+      <li v-click="1">Obtain two score profiles: Profile 1 and Profile 2</li>
       <li v-click="2">Calibrate each profile to -log<sub>10</sub>(ERR)<sup class="cite">15</sup></li>
       <li v-click="3">Find anchor positions above the threshold on <i>Profile 1</i> and extract local windows</li>
-      <li v-click="4">Shift <i>Profile 2</i> relative to <i>Profile 1</i> and compute a similarity score within each window.</li>
+      <li v-click="4">Shift <i>Profile 2</i> relative to <i>Profile 1</i> and compute a similarity score within each window</li>
     </ol>
   </section>
 
@@ -281,7 +281,7 @@ routeAlias: formula-view
 </CardGrid>
 
 <Note>
-Interpretation: high score plus significant edge means similar recognition behavior, not necessarily identical parameters.
+Interpretation: a high, statistically significant score indicates similar recognition behavior, not necessarily identical parameters.
 </Note>
 
 ---
@@ -311,10 +311,10 @@ Does the method rank the corresponding TF motif near the top?
 ::right::
 
 - HOCOMOCO v14 mouse motifs<sup class="cite">17</sup>
-- Matching _in vitro_ and _in vivo_ motif collections only for common TFs
-- Correct hit = same TF annotation
+- Matched _in vitro_ and _in vivo_ motif collections for TFs present in both sets
+- Correct hit = target motif with the same TF annotation
 - Metric evaluated within each Wingender class independently (at least 10 motifs per class)<sup class="cite">18</sup>
-- Number of common motifs for each collections = 1115 
+- Matched motifs per collection: 1,115
 - Metrics: MRR, Recall@k
 - Tools: Tomtom<sup class="cite">12</sup>, STAMP<sup class="cite">13</sup>, MACRO-APE<sup class="cite">14</sup>, MoSBAT<sup class="cite">19</sup>
 
@@ -361,7 +361,7 @@ routeAlias: benchmark-result
 clicks: 4
 ---
 
-## Benchmark result
+## Benchmark results
 
 <FigurePanel
   src="assets/compare_tools_by_metrics.svg"
@@ -420,7 +420,7 @@ clicks: 4
     font-size: 16px;
   "
 >
-    MIMOSA matches base-line tools in MRR
+    MIMOSA is comparable to established tools in MRR
 </div>
 
 <div
@@ -440,11 +440,11 @@ clicks: 4
     font-size: 16px;
   "
 >
-    MIMOSA matches base-line tools in Recall@5
+    MIMOSA is comparable to established tools in Recall@5
 </div>
 
 <Note v-click="4">
-MIMOSA provides motif annotation quality comparable to established PWM-oriented tools, while also supporting non-PWM motif models
+MIMOSA provides motif annotation quality comparable to established PWM-oriented tools, while also supporting non-PWM motif models.
 </Note>
 
 ---
@@ -466,7 +466,7 @@ routeAlias: atf3-case
 
 ::left::
 
-- _M.musculus_ ATF3 ChIP-seq: **GTRD PEAKS037311**<sup class="cite">20</sup>.
+- _M. musculus_ ATF3 ChIP-seq: **GTRD PEAKS037311**<sup class="cite">20</sup>.
 - Top **2,000** MACS2 peaks
 - _de novo_ discovery tools:
     1. STREME
@@ -485,7 +485,7 @@ routeAlias: same-data-different-outputs
 clicks: 6
 ---
 
-## Discovered motifs in DepLogo view<sup class="cite">21</sup>
+## Discovered motifs visualized with DepLogo<sup class="cite">21</sup>
 
 <CardGrid :columns="5" class="motif-output-grid">
   <Card title="PWM-1">
@@ -671,7 +671,7 @@ routeAlias: pairwise-profile-graph
     <Card title="Profile-based comparison (Cosine)" text="Compares the original motif models by their calibrated recognition profiles">
         <img class="card-media" :src="'assets/graph_cosine.svg'" alt="Flanking sequence context schematic" style="width: 100%; max-height: 350px; object-fit: contain;"/>
     </Card>
-  <Card title="PWM-based comparison (PCC)" text="Motifs are converted to PWMs through predicted binding sites">
+  <Card title="PFM-reconstruction comparison (PCC)" text="Motifs are summarized as PFMs reconstructed from predicted binding sites">
       <img class="card-media" :src="'assets/graph_pcc.svg'" alt="Flanking sequence context schematic" style="width: 100%; max-height: 350px; object-fit: contain;"/>
   </Card>
 </CardGrid>
@@ -687,7 +687,7 @@ clicks: 3
 
 ## Site-level support
 
-TFBSs were predicted for all motifs at $-\log_{10}(\mathrm{ERR}) = 3$, intersected by coordinates, and summarized with SuperVenn<sup class="cite">22</sup>
+TFBSs were predicted for all motifs at $-\log_{10}(\mathrm{ERR}) = 3$; strand-matched coordinate overlaps were summarized with SuperVenn<sup class="cite">22</sup>
 
 <div style="height: 24px"></div>
 
@@ -742,7 +742,7 @@ TFBSs were predicted for all motifs at $-\log_{10}(\mathrm{ERR}) = 3$, intersect
 
 
 <Note v-click="1">
-    <span v-mark="{ at: 1, type: 'underline', color: '#9a4f48', iterations: 3 }">PWM-1 and PWM-2 remain separated at the site level</span>; while <span v-mark="{ at: 2, type: 'underline', color: '#FF9E20', iterations: 3 }">BaMM shares sites with</span> both spacer variants: <span v-mark="{ at: 2, type: 'underline', color: '#FF9E20', iterations: 3 }">PWM-1 (1-bp spacer)</span> and <span v-mark="{ at: 3, type: 'underline', color: '#FF9E20', iterations: 3 }">PWM-2 (2-bp spacer)</span>
+    <span v-mark="{ at: 1, type: 'underline', color: '#9a4f48', iterations: 3 }">PWM-1 and PWM-2 remain separated at the site level</span>, whereas <span v-mark="{ at: 2, type: 'underline', color: '#FF9E20', iterations: 3 }">BaMM shares sites with</span> both spacer variants: <span v-mark="{ at: 2, type: 'underline', color: '#FF9E20', iterations: 3 }">PWM-1 (1-bp spacer)</span> and <span v-mark="{ at: 3, type: 'underline', color: '#FF9E20', iterations: 3 }">PWM-2 (2-bp spacer)</span>
 
 </Note>
 
@@ -756,8 +756,8 @@ routeAlias: take-home
   <div>
     <ol>
       <li>MIMOSA compares <strong>recognition profiles</strong>, not motif parameters.</li>
-      <li>It stays close to strong established tools in a HOCOMOCO retrieval benchmark.</li>
-      <li>It reveals that BaMM/Slim recognize both PWM spacer variants without flattening models to PWMs.</li>
+      <li>It achieves retrieval performance close to strong established tools in a HOCOMOCO benchmark.</li>
+      <li>In the ATF3 case study, it shows that BaMM and Slim recognize both PWM spacer variants without flattening models to PWMs.</li>
     </ol>
     <p><strong>Software:</strong></p>
     <ul>
@@ -777,7 +777,7 @@ routeAlias: take-home
 </div>
 
 <Note>
-The research was funded by the Russian Science Foundation, 25-74-00116
+This research was funded by the Russian Science Foundation, grant 25-74-00116.
 </Note>
 ---
 routeAlias: references

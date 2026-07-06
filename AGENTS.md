@@ -60,7 +60,7 @@ The presentation should communicate the following ideas:
 
 ## Project Structure
 
-- `slides.md`: Slidev deck entry point (34 slides).
+- `slides.md`: Slidev deck entry point (27 slides).
 - `components/`: small Vue components used by the deck
   (`BadgeRow`, `Callout`, `Card`, `CardGrid`, `Eyebrow`, `FigurePanel`, `ListCard`, `MetricGrid`, `Note`, `PipeFlow`, `PipelineFlow`).
   Components are thin wrappers with a `<slot/>`; `v-click`, `v-mark`, `class`, and `data-id` pass through to the root element.
@@ -121,7 +121,11 @@ After substantive edits:
 pnpm run build
 ```
 
-Also check that Slidev still parses 34 slides unless the slide count was intentionally changed.
+Also check that Slidev still parses 27 slides unless the slide count was intentionally changed:
+
+```fish
+node -e "const fs=require('fs'); const {parseSync}=require('@slidev/parser'); const md=fs.readFileSync('slides.md','utf8'); console.log(parseSync(md,'slides.md').slides.length)"
+```
 
 For visual / click-animation changes, run `pnpm run dev` and step through the affected slides (especially `binding-to-annotation`) to verify click ordering, arrow anchors, and `v-mark` reveal timing.
 
