@@ -211,18 +211,6 @@ routeAlias: binding-to-annotation
 - Do different tools recover the same signal?-->
 
 ---
-routeAlias: conversion-can-mislead
----
-
-## Why conversion can mislead
-
-<PipeFlow />
-
-<Note>
-We need a comparison method that does not require every motif model to pretend to be a PWM.
-</Note>
-
----
 layout: section
 class: section-divider
 routeAlias: mimosa-idea
@@ -242,11 +230,11 @@ clicks: 5
 <div class="mimosa-method-grid">
   <section class="card mimosa-method-copy">
     <ol class="mimosa-method-steps">
-      <li>Scan a profile sequence set with both models.</li>
-      <li v-click="1">Read out raw row-score profiles M1 and M2.</li>
-      <li v-click="2">Calibrate each profile to <code>-log10(ERR)</code>.</li>
-      <li v-click="3">Mark anchors above the threshold on M1 and extract local windows.</li>
-      <li v-click="4">Shift M2 to match M1 shape and report the best similarity.</li>
+      <li>Scan a sequences with both motifs (<i>Motif 1</i>, <i>Motif 2</i>)</li>
+      <li v-click="1">Get score profiles Profile 1 and Profile 2</li>
+      <li v-click="2">Calibrate each profile to -log<sub>10</sub>(ERR)</li>
+      <li v-click="3">Find anchor positions above the threshold on <i>Profile 1</i> and extract local windows</li>
+      <li v-click="4">Shift <i>Profile 2</i> relative to <i>Profile 1</i> and compute a similarity score within each window.</li>
     </ol>
   </section>
 
@@ -254,32 +242,36 @@ clicks: 5
 </div>
 
 <Note v-click="5" class="mimosa-method-note">
-Similarity is the best local agreement between calibrated recognition profiles, not between motif parameters.
+MIMOSA reports the strand and shift where the
+<span v-mark="{ at: 5, type: 'underline', color: '#9a4f48', iterations: 3 }">similarity score is maximized</span>
+across local profile windows
 </Note>
 
 ---
-routeAlias: mimosa-returns
+routeAlias: formula-view
 ---
 
-## What MIMOSA returns
+## Similarity metrics used in MIMOSA
 
 <CardGrid :columns="2">
-  <ListCard
-    title="Similarity score"
-    :items="[
-      '<strong>Cosine</strong>: profile shape agreement.',
-      '<strong>Dice</strong>: overlap of profile signal.',
-      'Both range from 0 to 1.',
-    ]"
-  />
-  <ListCard
-    title="Statistical support"
-    :items="[
-      'Empirical null from shuffled motifs.',
-      'P-values from the tail distribution.',
-      'FDR correction for graph edges.',
-    ]"
-  />
+  <Card title="Cosine">
+
+  $$
+  S_{\cos}(x,y)=\frac{x \cdot y}{||x||\,||y||}
+  $$
+
+  Compares profile shape.
+
+  </Card>
+  <Card title="Dice">
+
+  $$
+  S_{\mathrm{Dice}}(x,y)=\frac{2\sum_i \min(x_i,y_i)}{\sum_i x_i+\sum_i y_i}
+  $$
+
+  Compares profile overlap.
+
+  </Card>
 </CardGrid>
 
 <Note>
@@ -305,19 +297,60 @@ routeAlias: benchmark-design
 
 ::left::
 
-- HOCOMOCO v14 mouse motifs.
-- **in vitro** motifs used as queries.
-- **in vivo** motifs used as targets.
-- Correct hit = same TF annotation.
+<Callout>
+Does the method rank the corresponding TF motif near the top?
+</Callout>
 
 ::right::
 
-<Callout>
-Retrieval question: does the method rank the corresponding TF motif near the top?
-</Callout>
+- HOCOMOCO v14 mouse motifs
+- Matching _in vitro_ and _in vivo_ motif collections only for common TFs
+- Correct hit = same TF annotation
+- Metric evaluate on each Wingender class independetly (at lest 10 motifs in class)
+- Number of common motifs for each collections = 1115 
+- Metrics: MMR, Recall@k
+- Tools: TomTom, Stamp, MACRO-APE, MoSBAT
+
+<style>
+.two-cols-header {
+  display: flex;
+  flex-direction: column;
+}
+</style>
+
+---
+routeAlias: metrics
+---
+
+## Metrics for tool comparison
+
+<CardGrid :columns="2" style="margin-bottom: 24px">
+  <Card title="MRR">
+
+  $$
+  \mathrm{MRR}=\frac{1}{|Q|}\sum_{q \in Q}\frac{1}{r_q}
+  $$
+
+  Mean reciprocal rank: rewards placing the first correct motif as high as possible.
+
+  </Card>
+  <Card title="Recall@k">
+
+  $$
+  \mathrm{Recall@}k=\frac{1}{|Q|}\sum_{q \in Q}\mathbf{1}\{r_q \le k\}
+  $$
+
+  Fraction of queries where a correct motif appears within the top $k$ results.
+
+  </Card>
+</CardGrid>
+
+$Q$ is the query motif set; $r_q$ is the rank of the first target motif annotated to the same TF as query $q$.
+
 
 ---
 routeAlias: benchmark-result
+clicks: 4
 ---
 
 ## Benchmark result
@@ -328,37 +361,82 @@ routeAlias: benchmark-result
   variant="wide"
 />
 
-<MetricGrid
-  :items="[
-    { value: '0.833', label: 'Tomtom MRR' },
-    { value: '0.826', label: 'MIMOSA-cosine MRR' },
-    { value: '0.825', label: 'MIMOSA-Dice MRR' },
-    { value: '0.946', label: 'MIMOSA Recall@10' },
-  ]"
+<div
+  v-if="$clicks === 1"
+  class="absolute"
+  style="left: 620px; top: 290px; width: 20px; height: 20px;"
+  v-mark="{ at: 1, type: 'circle', color: '#f87171', strokeWidth: 3, padding: 0 }"
+></div>
+
+<FancyArrow
+  v-if="$clicks === 1"
+  from="(770, 380)"
+  to="(645,300)"
+  color="red"
+  :width="3"
+  :head-size="22"
+  :roughness="1"
+  :arc="-0.2"
+  :duration="600"
 />
 
----
-routeAlias: benchmark-message
----
+<div
+  v-if="$clicks === 1"
+  class="absolute text-xs font-semibold rounded-full px-3 py-1"
+  style="
+    left: 770px;
+    top: 380px;
+    color: #f87171;
+    background: #000000;
+    font-size: 16px;
+  "
+>
+    One TF class
+</div>
 
-## Benchmark message
 
-<CardGrid :columns="2">
-  <Callout type="good">
-  MIMOSA is competitive with the strongest matrix-oriented methods.
-  </Callout>
-  <ListCard
-    :items="[
-      'Tomtom keeps a small lead in mean MRR and Recall@1.',
-      'MIMOSA is close: Recall@1 is approximately 0.766.',
-      'MACRO-APE has the highest Recall@10: 0.954.',
-      'STAMP is clearly lower in this benchmark.',
-    ]"
-  />
-</CardGrid>
+<div
+  class="absolute"
+  style="left: 176px; top: 183px; width: 198px; height: 80px;"
+  v-mark="{ at: 2, type: 'box', color: '#f87171', strokeWidth: 3, padding: 0 }"
+></div>
 
-<Note>
-The point is not "MIMOSA beats everyone"; it is "profile comparison keeps accuracy while allowing cross-model comparison".
+<div
+  v-click="2"
+  class="absolute text-xs font-semibold rounded-full px-3 py-1"
+  style="
+    left: 90px;
+    top: 150px;
+    color: #f87171;
+    background: #000000;
+    font-size: 16px;
+  "
+>
+    MIMOSA matches base-line tools in MRR
+</div>
+
+<div
+  class="absolute"
+  style="left: 710px; top: 153px; width: 198px; height: 80px;"
+  v-mark="{ at: 3, type: 'box', color: '#f87171', strokeWidth: 3, padding: 0 }"
+></div>
+
+<div
+  v-click="3"
+  class="absolute text-xs font-semibold rounded-full px-3 py-1"
+  style="
+    left: 604px;
+    top: 120px;
+    color: #f87171;
+    background: #000000;
+    font-size: 16px;
+  "
+>
+    MIMOSA matches base-line tools in Recall@5
+</div>
+
+<Note v-click="4">
+MIMOSA provides motif annotation quality comparable to established PWM-oriented tools, while also supporting non-PWM motif models
 </Note>
 
 ---
@@ -369,71 +447,210 @@ routeAlias: where-mimosa-helps
 
 <Eyebrow>ATF3 case study</Eyebrow>
 
-# Where MIMOSA helps
-
-Interpreting heterogeneous motifs from one ATF3 ChIP-seq experiment.
+# Analisys of motifs from one ChIP-seq experiment
 
 ---
 layout: two-cols-header
 routeAlias: atf3-case
 ---
 
-## ATF3 case study
+## Data
 
 ::left::
 
-- Mouse ATF3 ChIP-seq: **GTRD PEAKS037311**.
-- Top **2,000** MACS2 peaks.
-- De novo discovery with STREME, BaMM, DIMONT and Slim.
+- _M.musculus_ ATF3 ChIP-seq: **GTRD PEAKS037311**.
+- Top **2,000** MACS2 peaks
+- _de novo_ discovery tools:
+    1. STREME
+    2. BaMM
+    3. DIMONT 
+    4. Slim
 
 ::right::
 
 <Callout>
-Question: are these outputs different motifs, or different representations of the same AP-1/CRE-like signal?
+How similar are the ATF3 motifs recovered by different models?
 </Callout>
 
 ---
 routeAlias: same-data-different-outputs
+clicks: 6
 ---
 
-## Same data, different outputs
+## Discovered motifs in DepLogo view
 
-<CardGrid :columns="2">
-  <ListCard
-    title="STREME PWMs"
-    :items="[
-      '<strong>PWM-1:</strong> <code>TGAnTCA</code>.',
-      '<strong>PWM-2:</strong> <code>TGAnnTCA</code>.',
-      'One nucleotide difference in spacer length.',
-    ]"
-  />
-  <ListCard
-    title="Flexible models"
-    :items="[
-      '<strong>BaMM</strong> and <strong>Slim</strong> capture both variants in one model.',
-      '<strong>DIMONT</strong> is more divergent.',
-    ]"
-  />
+<CardGrid :columns="5" class="motif-output-grid">
+  <Card title="PWM-1">
+    <img src="./assets/PWM-1_PEAKS037311_ATF3_Q60765_MACS2.svg" alt="PWM-1 motif" />
+    <p><code>TGAnTCA</code></p>
+  </Card>
+
+  <Card title="PWM-2">
+    <img src="./assets/PWM-2_PEAKS037311_ATF3_Q60765_MACS2.svg" alt="PWM-2 motif" />
+    <p><code>TGAnnTCA</code></p>
+  </Card>
+
+  <Card title="BaMM">
+    <img
+      v-if="$clicks < 6"
+      src="./assets/BaMM_PEAKS037311_ATF3_Q60765_MACS2.svg"
+      alt="BaMM motif"
+    />
+    <img
+      v-else
+      src="./assets/BaMM_PEAKS037311_ATF3_Q60765_MACS2partitions.svg"
+      alt="BaMM motif partitions"
+    />
+  </Card>
+
+  <Card title="Slim">
+    <img
+      v-if="$clicks < 6"
+      src="./assets/Slim_PEAKS037311_ATF3_Q60765_MACS2.svg"
+      alt="Slim motif"
+    />
+    <img
+      v-else
+      src="./assets/Slim_PEAKS037311_ATF3_Q60765_MACS2partitions.svg"
+      alt="Slim motif partitions"
+    />
+  </Card>
+
+  <Card title="DIMONT">
+    <img
+      v-if="$clicks < 6"
+      src="./assets/Dimont_PEAKS037311_ATF3_Q60765_MACS2.svg"
+      alt="DIMONT motif"
+    />
+    <img
+      v-else
+      src="./assets/Dimont_PEAKS037311_ATF3_Q60765_MACS2partitions.svg"
+      alt="DIMONT motif partitions"
+    />
+  </Card>
 </CardGrid>
 
-<Note>
-This is exactly the case where forcing everything through one PFM can hide the story.
-</Note>
 
----
-routeAlias: database-annotation-check
----
+<div
+  v-if="$clicks === 1"
+  class="absolute"
+  style="left: 560px; top: 230px; width: 160px; height: 90px;"
+  v-mark="{ at: 1, type: 'box', color: '#000000', strokeWidth: 3, padding: 0 }"
+></div>
 
-## Database annotation check
-
-<FigurePanel
-  src="plots/example_PEAKS037311_ATF3_Q60765_MACS2/annotation_summary_tf_level.png"
-  alt="TF-level annotation summary for ATF3 motifs"
-  variant="wide"
+<FancyArrow
+  v-if="$clicks === 1"
+  from="(700, 190)"
+  to="(645,225)"
+  color="black"
+  :width="3"
+  :head-size="22"
+  :roughness="1"
+  :arc="-0.2"
+  :duration="600"
 />
 
+<div
+  v-if="$clicks === 1"
+  class="absolute text-xs font-semibold rounded-full px-3 py-1"
+  style="
+    left: 705px;
+    top: 177px;
+    color: #f87171;
+    background: #000000;
+    font-size: 16px;
+  "
+>
+    pairwise positional dependencies
+</div>
+
+
+<div
+  v-if="$clicks === 2"
+  class="absolute"
+  style="left: 560px; top: 325px; width: 160px; height: 90px;"
+  v-mark="{ at: 1, type: 'box', color: '#000000', strokeWidth: 3, padding: 0 }"
+></div>
+
+<FancyArrow
+  v-if="$clicks === 2"
+  from="(700, 190)"
+  to="(645,320)"
+  color="black"
+  :width="3"
+  :head-size="22"
+  :roughness="1"
+  :arc="-0.2"
+  :duration="600"
+/>
+
+<div
+  v-if="$clicks === 2"
+  class="absolute text-xs font-semibold rounded-full px-3 py-1"
+  style="
+    left: 705px;
+    top: 177px;
+    color: #f87171;
+    background: #000000;
+    font-size: 16px;
+  "
+>
+    site block representation
+</div>
+
+
+<div
+  v-if="$clicks === 3"
+  class="absolute"
+  style="left: 560px; top: 400px; width: 160px; height: 50px;"
+  v-mark="{ at: 1, type: 'box', color: '#000000', strokeWidth: 3, padding: 0 }"
+></div>
+
+<FancyArrow
+  v-if="$clicks === 3"
+  from="(700, 195)"
+  to="(645,390)"
+  color="black"
+  :width="3"
+  :head-size="22"
+  :roughness="1"
+  :arc="-0.2"
+  :duration="600"
+/>
+
+<div
+  v-if="$clicks === 3"
+  class="absolute text-xs font-semibold rounded-full px-3 py-1"
+  style="
+    left: 705px;
+    top: 177px;
+    color: #f87171;
+    background: #000000;
+    font-size: 16px;
+  "
+>
+    logo
+</div>
+
+
+<div
+  v-if="$clicks === 5"
+  class="absolute"
+  style="left: 582px; top: 345px; width: 134px; height: 21px;"
+  v-mark="{ at: 1, type: 'box', color: '#000000', strokeWidth: 2, padding: 0 }"
+></div>
+
+<div
+  v-if="$clicks === 5"
+  class="absolute"
+  style="left: 582px; top: 370px; width: 119px; height: 32px;"
+  v-mark="{ at: 1, type: 'box', color: '#723EC3', strokeWidth: 2, padding: 0 }"
+></div>
+
+
+
 <Note>
-PWM-1, PWM-2, BaMM and Slim fall into AP-1/CRE-like, ATF3-compatible specificity; DIMONT is less aligned with the main cluster.
+Different motif models recover related AP-1/CRE-like signals, but represent site heterogeneity differently.
 </Note>
 
 ---
@@ -518,16 +735,6 @@ routeAlias: take-home
 Limitations to remember: profile sequence set, ERR calibration, recognition threshold, and empirical null model.
 </Callout>
 
----
-layout: end
-class: thank-you
-routeAlias: thank-you
----
-
-# Thank you
-
-Questions?
-
 Software: [github.com/ubercomrade/mimosa](https://github.com/ubercomrade/mimosa)
 
 ---
@@ -540,44 +747,6 @@ routeAlias: backup
 
 # Additional details
 
----
-routeAlias: static-workflow
----
-
-## Static workflow
-
-<FigurePanel
-  src="assets/article_fig1_workflow.png"
-  alt="Static workflow of the MIMOSA analysis"
-  variant="wide"
-/>
-
----
-routeAlias: formula-view
----
-
-## Formula view
-
-<CardGrid :columns="2">
-  <Card title="Cosine">
-
-  $$
-  S_{\cos}(x,y)=\frac{x \cdot y}{||x||\,||y||}
-  $$
-
-  Compares profile shape.
-
-  </Card>
-  <Card title="Dice">
-
-  $$
-  S_{\mathrm{Dice}}(x,y)=\frac{2\sum_i \min(x_i,y_i)}{\sum_i x_i+\sum_i y_i}
-  $$
-
-  Compares profile overlap.
-
-  </Card>
-</CardGrid>
 
 ---
 routeAlias: err-calibration-null
@@ -605,18 +774,6 @@ routeAlias: ranking-concordance
 <Note>
 Different tools rank the full target list differently, even when retrieval accuracy is close.
 </Note>
-
----
-routeAlias: atf3-motif-logos
----
-
-## ATF3 motif logos
-
-<FigurePanel
-  src="assets/article_fig4_atf3_logos.png"
-  alt="ATF3 motif logos from different motif discovery tools"
-  variant="tall"
-/>
 
 ---
 routeAlias: annotation-details-rr
