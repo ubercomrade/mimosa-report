@@ -34,6 +34,12 @@ Anton V. Tsukanov, PhD (Biology) &middot; Victor G. Levitsky, PhD (Biology)
 
 <span class="small">Institute of Cytology and Genetics SB RAS, Novosibirsk, Russia</span>
 
+<!--
+Good morning. My name is Anton Tsukanov.
+Today I will present MIMOSA, a method for representation-independent comparison of transcription factor motifs.
+The main idea is simple: instead of comparing internal parameters of motif models, we compare how these models recognize DNA sequences.
+-->
+
 
 ---
 layout: two-cols-header
@@ -55,6 +61,14 @@ routeAlias: why-motifs-matter
 <Callout>
 Motifs let us predict transcription factor binding sites (TFBSs) in the genome, which makes it possible to study transcription regulation.<sup class="cite">2</sup>
 </Callout>
+
+<!--
+Let me start from the biological context.
+Transcription factors bind short DNA sites and regulate gene expression.
+These sites are not identical, but they are similar.
+A motif summarizes this variation and helps us predict transcription factor binding sites in the genome.
+This prediction is one of the basic steps in studying transcription regulation.
+-->
 
 ---
 routeAlias: pwm-standard
@@ -78,6 +92,21 @@ clicks: 6
       <span v-mark="{ at: 6, type: 'underline', color: '#9a4f48', iterations: 3 }">The position-independence assumption may not always be valid</span>
   </Note>
 </div>
+
+<!--
+The most common motif representation is the position weight matrix, or PWM.
+A PWM is easy to interpret: each position contributes separately to the score of a candidate site, and these contributions are summed.
+
+[click] In the animation, we move from aligned binding sites to position-specific nucleotide preferences.
+
+[click] Then these preferences can be used to score a new sequence.
+
+[click] This simplicity is why PWMs remain the standard representation in many databases and tools.
+
+[click] But real transcription factor binding can include dependencies between positions.
+
+[click] So the position-independence assumption may be too restrictive for some motifs.
+-->
 
 ---
 routeAlias: beyond-independent-positions
@@ -103,6 +132,15 @@ routeAlias: beyond-independent-positions
 <Note>
 Models such as BaMM<sup class="cite">9</sup>, Slim<sup class="cite">10</sup> and DIMONT<sup class="cite">11</sup> preserve such dependencies instead of flattening them into a single matrix.
 </Note>
+
+<!--
+Why can positions depend on each other?
+There are several biological reasons.
+Dimerization can change the sequence preference of a transcription factor.
+Flanking regions can increase or decrease binding affinity for the same core site.
+Protein-DNA conformation can also allow sites that differ from the canonical motif.
+Alternative models, such as BaMM, Slim, and DIMONT, try to keep this information instead of flattening it into one independent matrix.
+-->
 
 ---
 routeAlias: binding-to-annotation
@@ -210,11 +248,22 @@ routeAlias: binding-to-annotation
 </Note>
 
 
-<!--After de novo discovery we still need to know:
+<!--
+Now let us look at the usual workflow from binding data to motif annotation.
 
-- Which known TF motif is closest?
-- Are two discovered models equivalent?
-- Do different tools recover the same signal?-->
+[click] First, we start with experimental data, for example HT-SELEX, DAP-seq, ChIP-seq, or CUT&Tag.
+The data are processed, and DNA sequences are extracted.
+
+[click] Then we run de novo motif discovery.
+Some tools produce PWM models, while other tools produce alternative motif models.
+
+[click] Finally, we need annotation: which known transcription factor motif is closest to our discovered motif?
+
+[click] This annotation step is the bottleneck for non-PWM models.
+
+[click] Most established annotation tools are designed for PWM or PFM motif models.
+So alternative models often have to be converted before annotation, and this conversion can lose useful information.
+-->
 
 ---
 layout: section
@@ -225,6 +274,13 @@ routeAlias: mimosa-idea
 <Eyebrow>MIMOSA idea</Eyebrow>
 
 # Compare model **behavior**, not model parameters
+
+<!--
+This is the central idea of MIMOSA.
+Different motif models can have very different internal parameters.
+So direct parameter comparison is not always meaningful.
+Instead, we compare behavior: do two models recognize the same DNA positions with similar scores?
+-->
 
 ---
 routeAlias: recognition-profile-comparison
@@ -252,6 +308,22 @@ MIMOSA reports the strand and shift where the
 <span v-mark="{ at: 5, type: 'underline', color: '#9a4f48', iterations: 3 }">similarity score is maximized</span>
 across local profile windows
 </Note>
+
+<!--
+For a pair of motifs, MIMOSA scans the same sequence set with both models.
+
+[click] This gives two recognition profiles: one profile for each motif.
+
+[click] Raw scores from different models are not directly comparable, so each profile is calibrated to negative log ERR.
+This puts different score scales into one common coordinate system.
+
+[click] Then MIMOSA selects anchor positions with strong signal and extracts local windows around them.
+
+[click] The second profile is shifted relative to the first profile, and both strands are checked.
+For every shift, MIMOSA computes a similarity score inside the local windows.
+
+[click] The final result is the strand and shift where the similarity is maximal.
+-->
 
 ---
 routeAlias: formula-view
@@ -284,6 +356,15 @@ routeAlias: formula-view
 Interpretation: a high, statistically significant score indicates similar recognition behavior, not necessarily identical parameters.
 </Note>
 
+<!--
+MIMOSA currently uses two similarity metrics.
+Cosine similarity mainly compares the shape of the score profiles.
+If the peaks appear at the same positions, cosine becomes high.
+Dice similarity focuses more on overlap of signal intensity.
+In both cases, a high and statistically significant score means similar recognition behavior.
+It does not mean that the internal parameters of the models are identical.
+-->
+
 ---
 layout: section
 class: section-divider
@@ -293,6 +374,12 @@ routeAlias: retrieval-question
 <Eyebrow>Benchmark against established tools</Eyebrow>
 
 # Does it work as a retrieval method?
+
+<!--
+After defining the method, we need to test whether it works for motif annotation.
+The benchmark question is a retrieval question.
+If I use one motif as a query, can the method place the corresponding transcription factor motif near the top of the ranked list?
+-->
 
 ---
 layout: two-cols-header
@@ -326,6 +413,15 @@ Does the method rank the corresponding TF motif near the top?
 }
 </style>
 
+<!--
+For the benchmark, we used HOCOMOCO mouse motifs.
+In vitro motifs were used as queries, and in vivo motifs were used as targets.
+A hit was correct if the target motif had the same transcription factor annotation as the query.
+The metrics were calculated inside Wingender transcription factor classes, so we did not mix very different DNA-binding families.
+In total, there were 1,115 matched motifs in each collection.
+We compared MIMOSA with Tomtom, STAMP, MACRO-APE, and MoSBAT.
+-->
+
 ---
 routeAlias: metrics
 ---
@@ -354,6 +450,14 @@ routeAlias: metrics
 </CardGrid>
 
 $Q$ is the query motif set; $r_q$ is the rank of the first target motif annotated to the same TF as query $q$.
+
+<!--
+We used two standard ranking metrics.
+MRR, or mean reciprocal rank, is sensitive to the position of the first correct hit.
+Rank one gives a score of one, rank two gives one half, and so on.
+Recall at k asks a simpler question: is the correct motif present among the top k results?
+Recall at five is close to practical use, because a researcher often checks several top candidates.
+-->
 
 
 ---
@@ -447,6 +551,20 @@ clicks: 4
 MIMOSA provides motif annotation quality comparable to established PWM-oriented tools, while also supporting non-PWM motif models.
 </Note>
 
+<!--
+This figure summarizes the benchmark results by transcription factor class.
+Each point corresponds to one class.
+
+[click] First, note that performance varies between classes, so the task is not equally easy for all transcription factor families.
+
+[click] For MRR, MIMOSA is close to the strongest established tools, especially Tomtom and MACRO-APE.
+
+[click] The same pattern is visible for Recall at five.
+
+[click] The main conclusion is not that MIMOSA always outperforms specialized PWM tools.
+The important point is that MIMOSA is competitive with them, while also supporting non-PWM motif models.
+-->
+
 ---
 layout: section
 class: section-divider
@@ -456,6 +574,12 @@ routeAlias: where-mimosa-helps
 <Eyebrow>ATF3 case study</Eyebrow>
 
 # Analysis of motifs from one ChIP-seq experiment
+
+<!--
+Now I will show where representation-independent comparison is useful in practice.
+We analyzed motifs from one ATF3 ChIP-seq experiment.
+The goal was not only to annotate the motifs, but also to understand whether different discovery models recover the same recognition signal.
+-->
 
 ---
 layout: two-cols-header
@@ -479,6 +603,13 @@ routeAlias: atf3-case
 <Callout>
 How similar are the ATF3 motifs recovered by different models?
 </Callout>
+
+<!--
+We used the top 2,000 MACS2 peaks from a mouse ATF3 ChIP-seq experiment in GTRD.
+Motifs were discovered with STREME, BaMM, DIMONT, and Slim.
+These tools use different motif representations.
+So the main question is: how similar are the motifs recovered from the same experimental data?
+-->
 
 ---
 routeAlias: same-data-different-outputs
@@ -661,6 +792,23 @@ clicks: 6
 Different motif models recover related AP-1/CRE-like signals, but represent site heterogeneity differently.
 </Note>
 
+<!--
+Here are the discovered motifs visualized with DepLogo.
+STREME returned two PWM motifs.
+One motif has a one-base spacer, and the other has a two-base spacer in an AP-1/CRE-like pattern.
+
+[click] For BaMM, DepLogo shows pairwise positional dependencies.
+
+[click] The site block representation shows that sites can be grouped into different variants.
+
+[click] The classical logo gives a more familiar summary of nucleotide preferences.
+
+[click] The important point is that the models are related, but they represent heterogeneity differently.
+
+[click] When we switch to the partition view, BaMM and Slim contain groups that correspond to both PWM spacer variants.
+So one flexible model can cover what is split into two PWM motifs.
+-->
+
 ---
 routeAlias: pairwise-profile-graph
 ---
@@ -679,6 +827,16 @@ routeAlias: pairwise-profile-graph
 <Note>
 By comparing recognition profiles, MIMOSA detects links that are partly lost after converting non-PWM models to PWMs.
 </Note>
+
+<!--
+Here we compare the same five motifs in two ways.
+The graph on the left uses profile-based comparison, so the original models are compared directly.
+It connects BaMM and Slim with both PWM variants.
+This suggests that the flexible models recognize both spacer variants.
+The graph on the right uses PFMs reconstructed from predicted sites and then compares them by Pearson correlation.
+Some links change, because reconstruction compresses a heterogeneous model into one matrix.
+This is exactly the situation where profile-based comparison can keep more information.
+-->
 
 ---
 routeAlias: site-level-support
@@ -746,6 +904,19 @@ TFBSs were predicted for all motifs at $-\log_{10}(\mathrm{ERR}) = 3$; strand-ma
 
 </Note>
 
+<!--
+Finally, we checked whether the model-level similarity is supported by predicted binding sites.
+All models were thresholded at negative log ERR equal to three.
+
+[click] PWM-1 and PWM-2 remain separated at the site level.
+They do not form shared strand-matched overlap clusters.
+
+[click] BaMM shares predicted sites with PWM-1, the one-base spacer variant.
+
+[click] BaMM also shares predicted sites with PWM-2, the two-base spacer variant.
+This supports the interpretation that BaMM integrates both spacer variants in one more flexible motif model.
+-->
+
 ---
 routeAlias: take-home
 ---
@@ -757,7 +928,7 @@ routeAlias: take-home
     <ol>
       <li>MIMOSA compares <strong>recognition profiles</strong>, not motif parameters.</li>
       <li>It achieves retrieval performance close to strong established tools in a HOCOMOCO benchmark.</li>
-      <li>In the ATF3 case study, it shows that BaMM and Slim recognize both PWM spacer variants without flattening models to PWMs.</li>
+      <li>It preserves model-specific recognition behavior, revealing when flexible models cover multiple PWM variants.</li>
     </ol>
     <p><strong>Software:</strong></p>
     <ul>
@@ -779,6 +950,15 @@ routeAlias: take-home
 <Note>
 This research was funded by the Russian Science Foundation, grant 25-74-00116.
 </Note>
+
+<!--
+To conclude, MIMOSA compares recognition profiles rather than internal motif parameters.
+In the HOCOMOCO benchmark, it performs close to established PWM-oriented tools.
+In the ATF3 case study, it helps show that flexible models can cover several PWM variants.
+The software is available on GitHub and PyPI.
+This research was funded by the Russian Science Foundation.
+Thank you for your attention.
+-->
 ---
 routeAlias: references
 class: references-slide
@@ -811,6 +991,11 @@ class: references-slide
   <li>Indukaev F. gecko984/supervenn: v0.5.0. <em>Zenodo</em>, 2024. doi:10.5281/zenodo.11395173</li>
 </ol>
 
+<!--
+I will not present the references during the main 10 to 12 minute talk.
+This slide is here if there are questions about sources.
+-->
+
 ---
 layout: section
 class: section-divider
@@ -820,6 +1005,11 @@ routeAlias: backup
 <Eyebrow>Backup</Eyebrow>
 
 # Additional details
+
+<!--
+This starts the backup section.
+I will move here only if there is time or if there is a specific question.
+-->
 
 ---
 routeAlias: err-calibration-null
@@ -831,6 +1021,13 @@ routeAlias: err-calibration-null
 - `-log10(ERR)` puts different score scales into one coordinate system.
 - Shuffled HOCOMOCO motifs define empirical background similarity.<sup class="cite">17</sup>
 - FDR controls multiple testing in benchmark and case-study comparisons.
+
+<!--
+Use this slide if someone asks about score calibration or statistical support.
+ERR means expected recognition rate.
+The negative log ERR scale helps compare scores from different model types.
+For significance, we used shuffled HOCOMOCO motifs as an empirical null distribution, and FDR correction controlled multiple testing.
+-->
 
 ---
 routeAlias: ranking-concordance
@@ -848,6 +1045,13 @@ routeAlias: ranking-concordance
 Different tools rank the full target list differently, even when retrieval accuracy is close.
 </Note>
 
+<!--
+Use this slide if someone asks whether MIMOSA produces the same rankings as existing tools.
+The answer is partly yes and partly no.
+The correlations are positive, but they are not perfect.
+This means different tools emphasize different aspects of motif similarity, especially for weaker candidates.
+-->
+
 ---
 routeAlias: annotation-details-rr
 ---
@@ -859,6 +1063,12 @@ routeAlias: annotation-details-rr
   alt="Reciprocal-rank annotation details at TF level"
   variant="tall"
 />
+
+<!--
+Use this slide if someone asks about ATF3 database matching ranks.
+Higher reciprocal rank means that the ATF3-compatible database match appears closer to the top.
+The main message is that profile-based comparison supports AP-1/CRE-like, ATF3-compatible annotation for PWM, BaMM, and Slim models.
+-->
 
 ---
 routeAlias: annotation-details-significance
@@ -872,6 +1082,13 @@ routeAlias: annotation-details-significance
   variant="tall"
 />
 
+<!--
+Use this slide if someone asks about statistical significance of ATF3 matches.
+The y-axis shows adjusted significance values.
+The dashed line marks the FDR threshold.
+This helps separate strong ATF3-compatible matches from weaker or divergent cases.
+-->
+
 ---
 routeAlias: alignment-pwm1-pwm2
 ---
@@ -883,6 +1100,12 @@ routeAlias: alignment-pwm1-pwm2
   alt="Profile alignment comparing PWM-1 and PWM-2"
   variant="wide"
 />
+
+<!--
+Use this slide to explain why PWM-1 and PWM-2 are treated as separate spacer variants.
+When we anchor on sites from one PWM, the other PWM has a weak profile.
+This means that the two PWM models recognize different subsets of AP-1/CRE-like sites.
+-->
 
 ---
 routeAlias: alignment-pwm1-bamm
@@ -896,6 +1119,12 @@ routeAlias: alignment-pwm1-bamm
   variant="wide"
 />
 
+<!--
+Use this slide to show that BaMM recognizes the PWM-1 spacer variant.
+Around PWM-1 anchor sites, BaMM has a strong aligned profile.
+When anchoring on BaMM sites, PWM-1 captures only part of the BaMM signal, because BaMM also recognizes another spacer variant.
+-->
+
 ---
 routeAlias: alignment-pwm2-bamm
 ---
@@ -907,3 +1136,9 @@ routeAlias: alignment-pwm2-bamm
   alt="Profile alignment comparing PWM-2 and BaMM"
   variant="wide"
 />
+
+<!--
+Use this slide to show the same pattern for PWM-2.
+BaMM also recognizes the two-base spacer variant.
+Together with the previous slide, this explains why BaMM is similar to both PWM motifs in profile-based comparison.
+-->
