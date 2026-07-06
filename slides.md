@@ -13,8 +13,6 @@ transition: slide-left
 comark: true
 layout: cover
 class: title-slide
-routeAlias: title
-routerMode: hash
 fonts:
   provider: none
   sans: Verdana
