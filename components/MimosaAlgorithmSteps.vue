@@ -252,7 +252,7 @@ const showResult = computed(() => s.value >= 5);
                 <g
                     v-show="showScan"
                     class="scan-layer"
-                    transform="translate(0, -4)"
+                    transform="translate(0, 32)"
                 >
                     <g
                         v-for="model in scanModels"
