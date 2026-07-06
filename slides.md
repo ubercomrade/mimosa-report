@@ -9,7 +9,6 @@ htmlAttrs:
 colorSchema: light
 aspectRatio: 16/9
 canvasWidth: 1280
-routerMode: hash
 transition: slide-left
 comark: true
 layout: cover
