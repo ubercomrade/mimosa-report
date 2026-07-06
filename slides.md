@@ -23,6 +23,8 @@ drawings:
   enabled: false
 exportFilename: MIMOSA_BGRS_2026_slidev
 download: false
+routerMode: hash
+presenter: true
 ---
 
 <Eyebrow>BGRS/SB-2026</Eyebrow>
