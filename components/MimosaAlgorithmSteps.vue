@@ -154,6 +154,8 @@ const m2ErrScores = [0.3, 0.4, 0.3, 3.6, 0.5, 0.4, 0.2, 0.4, 3.5, 0.3, 0.5, 0.3]
 
 const m1AxisBaseline = computed(() => (s.value >= 3 ? m1NormBaseline : m1RawBaseline));
 const m2AxisBaseline = computed(() => (s.value >= 3 ? m2NormBaseline : m2RawBaseline));
+const m1XAxisShift = computed(() => m1AxisBaseline.value - m1RawBaseline);
+const m2XAxisShift = computed(() => m2AxisBaseline.value - m2RawBaseline);
 const profileYAxisLabel = computed(() => (s.value >= 3 ? "-log10(ERR)" : "Score"));
 
 function rawScoreToY(score, baseline) {
@@ -373,17 +375,38 @@ const showResult = computed(() => s.value >= 5);
                 >
                     <g class="profile-axis-layer">
                         <g class="profile-axis">
-                            <line
-                                class="profile-axis-line"
-                                x1="106"
-                                :y1="m1AxisBaseline"
-                                x2="650"
-                                :y2="m1AxisBaseline"
-                            />
-                            <polygon
-                                class="profile-axis-arrow"
-                                :points="`650,${m1AxisBaseline} 641,${m1AxisBaseline - 4} 641,${m1AxisBaseline + 4}`"
-                            />
+                            <g
+                                class="profile-x-axis"
+                                :style="{ transform: `translateY(${m1XAxisShift}px)` }"
+                            >
+                                <line
+                                    class="profile-axis-line"
+                                    x1="106"
+                                    :y1="m1RawBaseline"
+                                    x2="650"
+                                    :y2="m1RawBaseline"
+                                />
+                                <polygon
+                                    class="profile-axis-arrow"
+                                    :points="`650,${m1RawBaseline} 641,${m1RawBaseline - 4} 641,${m1RawBaseline + 4}`"
+                                />
+                                <text
+                                    class="profile-axis-label"
+                                    x="655"
+                                    :y="m1RawBaseline - 12"
+                                    text-anchor="end"
+                                >
+                                    Position
+                                </text>
+                                <text
+                                    class="profile-axis-tick"
+                                    x="96"
+                                    :y="m1RawBaseline + 4"
+                                    text-anchor="end"
+                                >
+                                    0
+                                </text>
+                            </g>
                             <line
                                 class="profile-axis-line"
                                 x1="106"
@@ -397,27 +420,11 @@ const showResult = computed(() => s.value >= 5);
                             />
                             <text
                                 class="profile-axis-label"
-                                x="655"
-                                :y="m1AxisBaseline - 12"
-                                text-anchor="end"
-                            >
-                                Position
-                            </text>
-                            <text
-                                class="profile-axis-label"
                                 x="116"
                                 :y="profileAxisTop(m1AxisBaseline) + 4"
                                 text-anchor="start"
                             >
                                 {{ profileYAxisLabel }}
-                            </text>
-                            <text
-                                class="profile-axis-tick"
-                                x="96"
-                                :y="m1AxisBaseline + 4"
-                                text-anchor="end"
-                            >
-                                0
                             </text>
                             <text
                                 v-show="showRawTitle"
@@ -439,17 +446,38 @@ const showResult = computed(() => s.value >= 5);
                             </text>
                         </g>
                         <g class="profile-axis">
-                            <line
-                                class="profile-axis-line"
-                                x1="106"
-                                :y1="m2AxisBaseline"
-                                x2="650"
-                                :y2="m2AxisBaseline"
-                            />
-                            <polygon
-                                class="profile-axis-arrow"
-                                :points="`650,${m2AxisBaseline} 641,${m2AxisBaseline - 4} 641,${m2AxisBaseline + 4}`"
-                            />
+                            <g
+                                class="profile-x-axis"
+                                :style="{ transform: `translateY(${m2XAxisShift}px)` }"
+                            >
+                                <line
+                                    class="profile-axis-line"
+                                    x1="106"
+                                    :y1="m2RawBaseline"
+                                    x2="650"
+                                    :y2="m2RawBaseline"
+                                />
+                                <polygon
+                                    class="profile-axis-arrow"
+                                    :points="`650,${m2RawBaseline} 641,${m2RawBaseline - 4} 641,${m2RawBaseline + 4}`"
+                                />
+                                <text
+                                    class="profile-axis-label"
+                                    x="655"
+                                    :y="m2RawBaseline - 12"
+                                    text-anchor="end"
+                                >
+                                    Position
+                                </text>
+                                <text
+                                    class="profile-axis-tick"
+                                    x="96"
+                                    :y="m2RawBaseline + 4"
+                                    text-anchor="end"
+                                >
+                                    0
+                                </text>
+                            </g>
                             <line
                                 class="profile-axis-line"
                                 x1="106"
@@ -463,27 +491,11 @@ const showResult = computed(() => s.value >= 5);
                             />
                             <text
                                 class="profile-axis-label"
-                                x="655"
-                                :y="m2AxisBaseline - 12"
-                                text-anchor="end"
-                            >
-                                Position
-                            </text>
-                            <text
-                                class="profile-axis-label"
                                 x="116"
                                 :y="profileAxisTop(m2AxisBaseline) + 4"
                                 text-anchor="start"
                             >
                                 {{ profileYAxisLabel }}
-                            </text>
-                            <text
-                                class="profile-axis-tick"
-                                x="96"
-                                :y="m2AxisBaseline + 4"
-                                text-anchor="end"
-                            >
-                                0
                             </text>
                             <text
                                 v-show="showRawTitle"
@@ -730,6 +742,10 @@ const showResult = computed(() => s.value >= 5);
     fill: var(--alt-deep);
 }
 
+.profile-x-axis {
+    transition: transform 650ms ease;
+}
+
 .profile-axis-line {
     stroke: var(--muted);
     stroke-linecap: round;
@@ -739,7 +755,6 @@ const showResult = computed(() => s.value >= 5);
 
 .profile-axis-arrow {
     fill: var(--muted);
-    transition: points 650ms ease;
 }
 
 .profile-axis-label,
