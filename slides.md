@@ -242,11 +242,11 @@ clicks: 5
 <div class="mimosa-method-grid">
   <section class="card mimosa-method-copy">
     <ol class="mimosa-method-steps">
-      <li>Scan a shared profile sequence set.</li>
-      <li v-click="1">Read out raw row-score profiles for each model.</li>
-      <li v-click="2">Calibrate to <code>-log10(ERR)</code>; anchors rise above the threshold.</li>
-      <li v-click="3">Extract paired ±10-position local windows around each M1 anchor.</li>
-      <li v-click="4">Report the best cosine/Dice agreement over strand and shift.</li>
+      <li>Scan a profile sequence set with both models.</li>
+      <li v-click="1">Read out raw row-score profiles M1 and M2.</li>
+      <li v-click="2">Calibrate each profile to <code>-log10(ERR)</code>.</li>
+      <li v-click="3">Mark anchors above the threshold on M1 and extract local windows.</li>
+      <li v-click="4">Shift M2 to match M1 shape and report the best similarity.</li>
     </ol>
   </section>
 
@@ -323,7 +323,7 @@ routeAlias: benchmark-result
 ## Benchmark result
 
 <FigurePanel
-  src="plots/Compare/compare_tools_by_metrics.png"
+  src="assets/compare_tools_by_metrics.svg"
   alt="Benchmark metrics comparing MIMOSA with established motif-comparison tools"
   variant="wide"
 />
