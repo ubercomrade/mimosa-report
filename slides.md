@@ -657,35 +657,31 @@ Different motif models recover related AP-1/CRE-like signals, but represent site
 routeAlias: pairwise-profile-graph
 ---
 
-## Pairwise profile graph
+## Pairwise comparison graph
 
-<CardGrid :columns="2">
-  <ListCard
-    :badges="['cosine', 'FDR \u003c 0.05']"
-    :items="[
-      'BaMM-PWM-1: <strong>0.88</strong>.',
-      'BaMM-PWM-2: <strong>0.86</strong>.',
-      'Slim-PWM-1: <strong>0.82</strong>.',
-      'Slim-PWM-2: <strong>0.77</strong>.',
-      'BaMM-Slim: <strong>0.89</strong>.',
-    ]"
-  />
-  <FigurePanel
-    src="plots/example_PEAKS037311_ATF3_Q60765_MACS2/graph_cosine.svg"
-    alt="Pairwise profile graph for ATF3 motifs by cosine similarity"
-    variant="compact"
-  />
+<CardGrid :columns="2" style="min-height: 460px;">
+    <Card title="Profile-based comparison (Cosine)" text="Compares the original motif models by their calibrated recognition profiles">
+        <img class="card-media" :src="'assets/graph_cosine.svg'" alt="Flanking sequence context schematic" style="width: 100%; max-height: 350px; object-fit: contain;"/>
+    </Card>
+  <Card title="PWM-based comparison (PCC)" text="Motifs are converted to PWMs through predicted binding sites">
+      <img class="card-media" :src="'assets/graph_pcc.svg'" alt="Flanking sequence context schematic" style="width: 100%; max-height: 350px; object-fit: contain;"/>
+  </Card>
 </CardGrid>
 
 <Note>
-No direct PWM-1/PWM-2 edge: the two PWM motifs behave like separate spacer variants.
+By comparing recognition profiles, MIMOSA detects links that are partly lost after converting non-PWM models to PWMs.
 </Note>
 
 ---
 routeAlias: site-level-support
+clicks: 2
 ---
 
 ## Site-level support
+
+TFBSs were predicted for all motifs at $-\log_{10}(\mathrm{ERR}) = 3$, intersected by coordinates, and summarized with SuperVenn
+
+<div style="height: 24px"></div>
 
 <FigurePanel
   src="plots/example_PEAKS037311_ATF3_Q60765_MACS2/supervenn.png"
@@ -693,17 +689,16 @@ routeAlias: site-level-support
   variant="wide"
 />
 
-<MetricGrid
-  :items="[
-    { value: '8,641', label: 'BaMM sites' },
-    { value: '6,554', label: 'PWM-1 sites' },
-    { value: '5,726', label: 'Slim sites' },
-    { value: '4,622', label: 'PWM-2 sites' },
-  ]"
-/>
+<div
+  v-if="$clicks === 1"
+  class="absolute"
+  style="left: 582px; top: 345px; width: 134px; height: 21px;"
+  v-mark="{ at: 1, type: 'box', color: '#000000', strokeWidth: 2, padding: 0 }"
+></div>
+
 
 <Note>
-DIMONT: 4,136 sites. PWM-1 and PWM-2 form no strand-matched overlap clusters; BaMM overlaps both.
+PWM-1 and PWM-2 form no strand-matched overlap clusters; BaMM overlaps both spacer variants.
 </Note>
 
 ---
