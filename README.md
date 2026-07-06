@@ -29,9 +29,11 @@ The deploy workflow in `.github/workflows/deploy.yml` does this automatically on
 push to `main`. It uses pnpm, `pnpm-lock.yaml`, and uploads `dist/` to GitHub
 Pages.
 
-Slidev is built with the default history router. The generated `404.html` is
-required by GitHub Pages so direct links such as `/mimosa-report/why-motifs-matter`
-and `/mimosa-report/presenter/title` resolve back to the Slidev app.
+Slidev is built with the hash router (`routerMode: hash`). On GitHub Pages,
+`/mimosa-report/` is the site base path and the slide route must stay after
+`#`. Use links such as `/mimosa-report/#/` and `/mimosa-report/#/2`.
+Do not duplicate the repository path inside the hash route, for example
+`/mimosa-report/#/mimosa-report/2` is invalid.
 
 ## Structure
 
