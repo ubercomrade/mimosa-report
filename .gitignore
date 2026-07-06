@@ -6,3 +6,4 @@ dist
 .remote-assets
 .slidev
 components.d.ts
+.AGENTS.md

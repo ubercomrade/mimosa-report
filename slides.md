@@ -41,16 +41,16 @@ routeAlias: why-motifs-matter
 
 ::left::
 
-- Transcription factors (TFs) bind specific DNA sites and interact with the transcriptional complex
+- Transcription factors (TFs) bind specific DNA sites and interact with the transcriptional complex<sup class="cite">1</sup>
 - TFs control gene expression programs.
 - One TF can bind to a range of similar DNA sequences.
-- A **motif** captures the allowed variation within them.
+- A **motif** captures the allowed variation within them.<sup class="cite">2</sup>
 
 
 ::right::
 
 <Callout>
-Motifs let us predict transcription factor binding sites (TFBS) in the genome, which makes it possible to study transcription regulation.
+Motifs let us predict transcription factor binding sites (TFBS) in the genome, which makes it possible to study transcription regulation.<sup class="cite">2</sup>
 </Callout>
 
 ---
@@ -63,9 +63,9 @@ clicks: 6
 <div class="pwm-standard-grid">
   <section class="card pwm-standard-copy">
     <ul class="pwm-theses">
-      <li>A PWM is built from aligned binding sites and scores candidate sites as a sum of position-specific contributions</li>
-      <li v-click="4">PWM remains the de facto standard for motif representation and analysis</li>
-      <li v-click="5">However, real TF binding can involve dependencies between motif positions, so some binding sites may be poorly captured by PWM alone</li>
+      <li>A PWM is built from aligned binding sites and scores candidate sites as a sum of position-specific contributions<sup class="cite">3</sup></li>
+      <li v-click="4">PWM remains the de facto standard for motif representation and analysis<sup class="cite">3</sup></li>
+      <li v-click="5">However, real TF binding can involve dependencies between motif positions, so some binding sites may be poorly captured by PWM alone<sup class="cite">4,5</sup></li>
     </ul>
   </section>
 
@@ -83,19 +83,22 @@ routeAlias: beyond-independent-positions
 ## Nature of dependency positions
 
 <CardGrid :columns="3" class="card-grid-size-45-28-28 card-grid-bottom-media">
-    <Card title="Dimerization" text="A partner TF can influence binding affinity at TFBSs.">
+    <Card title="Dimerization">
+        <p>A partner TF can influence binding affinity at TFBSs.<sup class="cite">6</sup></p>
         <img class="card-media" :src="'assets/dimerization.svg'" alt="Dimerization schematic" />
     </Card>
-    <Card title="Flanks" text="Flanking regions can either increase or decrease affinity for the same binding site.">
+    <Card title="Flanks">
+        <p>Flanking regions can either increase or decrease affinity for the same binding site.<sup class="cite">7</sup></p>
         <img class="card-media" :src="'assets/context.svg'" alt="Flanking sequence context schematic" />
     </Card>
-    <Card title="Conformation" text="Some TFs can bind sites that differ substantially from the canonical motif.">
+    <Card title="Conformation">
+        <p>Some TFs can bind sites that differ substantially from the canonical motif.<sup class="cite">8</sup></p>
         <img class="card-media" :src="'assets/conformation.svg'" alt="Conformation-dependent binding schematic" />
     </Card>
 </CardGrid>
 
 <Note>
-Models such as BaMM, Slim and DIMONT try to preserve this extra structure instead of flattening it into one matrix.
+Models such as BaMM<sup class="cite">9</sup>, Slim<sup class="cite">10</sup> and DIMONT<sup class="cite">11</sup> try to preserve this extra structure instead of flattening it into one matrix.
 </Note>
 
 ---
@@ -200,7 +203,7 @@ routeAlias: binding-to-annotation
 
 
 <Note v-click="5" data-id="bottleneck-note">
-  <span v-mark="{ at: 5, type: 'underline', color: '#9a4f48', iterations: 3 }">Annotation tools exist only for PWM motif models, but not for alternative motif models.</span> Non-PWM models often have to be converted before annotation.
+  <span v-mark="{ at: 5, type: 'underline', color: '#9a4f48', iterations: 3 }">Annotation tools exist only for PWM motif models, but not for alternative motif models.</span><sup class="cite">12-14</sup> Non-PWM models often have to be converted before annotation.
 </Note>
 
 
@@ -232,7 +235,7 @@ clicks: 5
     <ol class="mimosa-method-steps">
       <li>Scan a sequences with both motifs (<i>Motif 1</i>, <i>Motif 2</i>)</li>
       <li v-click="1">Get score profiles Profile 1 and Profile 2</li>
-      <li v-click="2">Calibrate each profile to -log<sub>10</sub>(ERR)</li>
+      <li v-click="2">Calibrate each profile to -log<sub>10</sub>(ERR)<sup class="cite">15</sup></li>
       <li v-click="3">Find anchor positions above the threshold on <i>Profile 1</i> and extract local windows</li>
       <li v-click="4">Shift <i>Profile 2</i> relative to <i>Profile 1</i> and compute a similarity score within each window.</li>
     </ol>
@@ -260,7 +263,7 @@ routeAlias: formula-view
   S_{\cos}(x,y)=\frac{x \cdot y}{||x||\,||y||}
   $$
 
-  Compares profile shape.
+  Compares profile shape.<sup class="cite">16</sup>
 
   </Card>
   <Card title="Dice">
@@ -269,7 +272,7 @@ routeAlias: formula-view
   S_{\mathrm{Dice}}(x,y)=\frac{2\sum_i \min(x_i,y_i)}{\sum_i x_i+\sum_i y_i}
   $$
 
-  Compares profile overlap.
+  Compares profile overlap.<sup class="cite">16</sup>
 
   </Card>
 </CardGrid>
@@ -303,13 +306,13 @@ Does the method rank the corresponding TF motif near the top?
 
 ::right::
 
-- HOCOMOCO v14 mouse motifs
+- HOCOMOCO v14 mouse motifs<sup class="cite">17</sup>
 - Matching _in vitro_ and _in vivo_ motif collections only for common TFs
 - Correct hit = same TF annotation
-- Metric evaluate on each Wingender class independetly (at lest 10 motifs in class)
+- Metric evaluated within each Wingender class independently (at least 10 motifs per class)<sup class="cite">18</sup>
 - Number of common motifs for each collections = 1115 
-- Metrics: MMR, Recall@k
-- Tools: TomTom, Stamp, MACRO-APE, MoSBAT
+- Metrics: MRR, Recall@k
+- Tools: Tomtom<sup class="cite">12</sup>, STAMP<sup class="cite">13</sup>, MACRO-APE<sup class="cite">14</sup>, MoSBAT<sup class="cite">19</sup>
 
 <style>
 .two-cols-header {
@@ -447,7 +450,7 @@ routeAlias: where-mimosa-helps
 
 <Eyebrow>ATF3 case study</Eyebrow>
 
-# Analisys of motifs from one ChIP-seq experiment
+# Analysis of motifs from one ChIP-seq experiment
 
 ---
 layout: two-cols-header
@@ -458,7 +461,7 @@ routeAlias: atf3-case
 
 ::left::
 
-- _M.musculus_ ATF3 ChIP-seq: **GTRD PEAKS037311**.
+- _M.musculus_ ATF3 ChIP-seq: **GTRD PEAKS037311**<sup class="cite">20</sup>.
 - Top **2,000** MACS2 peaks
 - _de novo_ discovery tools:
     1. STREME
@@ -477,7 +480,7 @@ routeAlias: same-data-different-outputs
 clicks: 6
 ---
 
-## Discovered motifs in DepLogo view
+## Discovered motifs in DepLogo view<sup class="cite">21</sup>
 
 <CardGrid :columns="5" class="motif-output-grid">
   <Card title="PWM-1">
@@ -679,7 +682,7 @@ clicks: 3
 
 ## Site-level support
 
-TFBSs were predicted for all motifs at $-\log_{10}(\mathrm{ERR}) = 3$, intersected by coordinates, and summarized with SuperVenn
+TFBSs were predicted for all motifs at $-\log_{10}(\mathrm{ERR}) = 3$, intersected by coordinates, and summarized with SuperVenn<sup class="cite">22</sup>
 
 <div style="height: 24px"></div>
 
@@ -769,6 +772,38 @@ routeAlias: take-home
 </div>
 
 ---
+routeAlias: references
+class: references-slide
+---
+
+## References
+
+<ol class="references-list">
+  <li>Lambert S.A. et al. The human transcription factors. <em>Cell</em>, 2018. doi:10.1016/j.cell.2018.01.029</li>
+  <li>Wasserman W.W., Sandelin A. Applied bioinformatics for the identification of regulatory elements. <em>Nature Reviews Genetics</em>, 2004. doi:10.1038/nrg1315</li>
+  <li>Berg O.G., von Hippel P.H. Selection of DNA binding sites by regulatory proteins. <em>Journal of Molecular Biology</em>, 1987. doi:10.1016/0022-2836(87)90354-8</li>
+  <li>Bulyk M.L. et al. Interdependent effects of nucleotides in TF binding sites. <em>Nucleic Acids Research</em>, 2002. doi:10.1093/nar/30.5.1255</li>
+  <li>Cooper D.J. et al. Comprehensive analysis of nucleotide dependencies in TF binding sites. <em>Nucleic Acids Research</em>, 2023.</li>
+  <li>Amoutzias G.D. et al. Choose your partners: dimerization in eukaryotic TFs. <em>Trends in Biochemical Sciences</em>, 2008. doi:10.1016/j.tibs.2008.02.002</li>
+  <li>Levo M. et al. Determinants of TF binding outside the core binding site. <em>Genome Research</em>, 2015. doi:10.1101/gr.185033.114</li>
+  <li>Morgunova E., Taipale J. Structural insights into TFBS recognition. <em>Current Opinion in Structural Biology</em>, 2017. doi:10.1016/j.sbi.2017.09.003</li>
+  <li>Siebert M., Soding J. Bayesian Markov models outperform PWMs at motif prediction. <em>Nucleic Acids Research</em>, 2016. doi:10.1093/nar/gkw521</li>
+  <li>Keilwagen J., Grau J. Varying levels of complexity in TF binding motifs. <em>Nucleic Acids Research</em>, 2015. doi:10.1093/nar/gkv577</li>
+  <li>Grau J. et al. A general approach for discriminative de novo motif discovery. <em>Nucleic Acids Research</em>, 2013. doi:10.1093/nar/gkt831</li>
+  <li>Gupta S. et al. Quantifying similarity between motifs. <em>Genome Biology</em>, 2007. doi:10.1186/gb-2007-8-2-r24</li>
+  <li>Mahony S., Benos P.V. STAMP: exploring DNA-binding motif similarities. <em>Nucleic Acids Research</em>, 2007. doi:10.1093/nar/gkm272</li>
+  <li>Vorontsov I.E. et al. Jaccard index based comparison of TFBS models. <em>Algorithms for Molecular Biology</em>, 2013. doi:10.1186/1748-7188-8-23</li>
+  <li>Tsukanov A.V. et al. Independent and interdependent nucleotide impacts in motif models. <em>Frontiers in Plant Science</em>, 2022. doi:10.3389/fpls.2022.938545</li>
+  <li>Costa L. da F. On similarity. <em>Physica A</em>, 2022. doi:10.1016/j.physa.2022.127456</li>
+  <li>Vorontsov I.E. et al. HOCOMOCO v12: transcription factor binding models. <em>Nucleic Acids Research</em>, 2024.</li>
+  <li>Wingender E. et al. TFClass: classification of human TFs and mammalian orthologs. <em>Nucleic Acids Research</em>, 2018. doi:10.1093/nar/gkx987</li>
+  <li>Santana-Garcia G. et al. MoSBAT 2.0. <em>Nucleic Acids Research</em>, 2022. doi:10.1093/nar/gkac333</li>
+  <li>Kolmykov S. et al. GTRD: an integrated view of transcription regulation. <em>Nucleic Acids Research</em>, 2021. doi:10.1093/nar/gkaa1057</li>
+  <li>Grau J. et al. DepLogo: visualizing sequence dependencies in R. <em>Bioinformatics</em>, 2019. doi:10.1093/bioinformatics/btz507</li>
+  <li>Indukaev F. gecko984/supervenn: v0.5.0. <em>Zenodo</em>, 2024. doi:10.5281/zenodo.11395173</li>
+</ol>
+
+---
 layout: section
 class: section-divider
 routeAlias: backup
@@ -784,9 +819,9 @@ routeAlias: err-calibration-null
 
 ## ERR calibration and null
 
-- ERR estimates how often a model produces a score at least this high.
+- ERR estimates how often a model produces a score at least this high.<sup class="cite">15</sup>
 - `-log10(ERR)` puts different score scales into one coordinate system.
-- Shuffled HOCOMOCO motifs define empirical background similarity.
+- Shuffled HOCOMOCO motifs define empirical background similarity.<sup class="cite">17</sup>
 - FDR controls multiple testing in benchmark and case-study comparisons.
 
 ---

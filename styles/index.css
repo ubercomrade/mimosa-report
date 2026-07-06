@@ -127,6 +127,28 @@ body,
     text-decoration: underline;
 }
 
+sup.cite {
+    color: var(--primary-deep);
+    font-size: 0.52em;
+    font-weight: 800;
+    line-height: 0;
+    margin-left: 0.08em;
+    white-space: nowrap;
+}
+
+sup.cite::before {
+    content: "[";
+}
+
+sup.cite::after {
+    content: "]";
+}
+
+.badge sup.cite,
+.model-pill sup.cite {
+    margin-left: 2px;
+}
+
 .slidev-layout code {
     background: var(--primary-tint);
     border: 1px solid var(--primary-tint-border);
@@ -443,6 +465,37 @@ body,
     text-align: center;
     color: var(--muted);
     font-size: 0.9rem;
+}
+
+.slidev-layout.references-slide {
+    justify-content: flex-start !important;
+    padding-bottom: 34px;
+    padding-top: 28px;
+}
+
+.references-slide h2 {
+    margin-bottom: 12px;
+}
+
+.references-list {
+    columns: 2;
+    column-gap: 30px;
+    margin: 0;
+    padding-left: 1.75em;
+}
+
+.references-list li {
+    break-inside: avoid;
+    color: var(--ink);
+    font-size: 7.6pt;
+    line-height: 1.18;
+    margin: 0 0 5px;
+    padding-left: 4px;
+}
+
+.references-list li::marker {
+    color: var(--primary-deep);
+    font-weight: 800;
 }
 
 .grid-45 {
