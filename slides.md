@@ -13,6 +13,7 @@ transition: slide-left
 comark: true
 layout: cover
 class: title-slide
+routerMode: hash
 fonts:
   provider: none
   sans: Verdana
@@ -105,7 +106,6 @@ A PWM is easy to interpret: each position contributes separately to the score of
 -->
 
 ---
----
 
 ## Sources of positional dependencies
 
@@ -137,7 +137,6 @@ Protein-DNA conformation can also allow sites that differ from the canonical mot
 Alternative models, such as BaMM, Slim, and DIMONT, try to keep this information instead of flattening it into one independent matrix.
 -->
 
----
 ---
 
 ## From binding data to TF annotation
@@ -318,7 +317,6 @@ For every shift, MIMOSA computes a similarity score inside the local windows.
 -->
 
 ---
----
 
 ## Similarity metrics used in MIMOSA
 
@@ -411,7 +409,6 @@ In total, there were 1,115 matched motifs in each collection.
 We compared MIMOSA with Tomtom, STAMP, MACRO-APE, and MoSBAT.
 -->
 
----
 ---
 
 ## Metrics for tool comparison
