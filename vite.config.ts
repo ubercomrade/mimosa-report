@@ -19,10 +19,16 @@ export default defineConfig({
             children: `
 ;(function () {
   var base = '/mimosa-report/'
-  var hashPath = window.location.hash.slice(1)
-  if (hashPath.indexOf(base) === 0) {
-    window.location.replace(base + hashPath.slice(base.length))
+  function normalizeHashRoute() {
+    var hashPath = window.location.hash.slice(1)
+    if (hashPath.indexOf(base) === 0) {
+      window.location.replace(base + hashPath.slice(base.length))
+    } else if (hashPath.indexOf('/') === 0) {
+      window.location.replace(base + hashPath.slice(1))
+    }
   }
+  normalizeHashRoute()
+  window.addEventListener('hashchange', normalizeHashRoute)
 })()
 `,
           },

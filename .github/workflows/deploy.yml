@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - master
 
 permissions:
   contents: read
@@ -39,7 +40,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build Slidev
-        run: pnpm run build --base /${{ github.event.repository.name }}/
+        run: pnpm exec slidev build --out dist --base /${{ github.event.repository.name }}/
 
       - name: Setup GitHub Pages
         uses: actions/configure-pages@v6
