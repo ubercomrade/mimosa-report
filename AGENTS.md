@@ -25,7 +25,15 @@ pnpm run build
 pnpm run export
 ```
 
-`pnpm run dev` starts the browser presentation. `pnpm run build` writes the static build to `dist/`. `pnpm run export` writes `MIMOSA_BGRS_2026_slidev.pdf`.
+`pnpm run dev` starts the browser presentation. `pnpm run build` writes the static build to `dist/`. `pnpm run build:pages` builds with `--base /mimosa-report/` for GitHub Pages (used by `.github/workflows/deploy.yml`). `pnpm run export` writes `MIMOSA_BGRS_2026_slidev.pdf`.
+
+### Slidev version pin (52.15.2)
+
+`@slidev/cli` is pinned to **52.15.2** in `package.json`. Slidev 52.16.0 shipped a regression (PR slidevjs/slidev#2562) where `getSlidePath` prepends `import.meta.env.BASE_URL` to the route path even though `vue-router` is already created with that base via `createWebHashHistory(BASE_URL)`. The base is therefore applied twice, so on a subdirectory deploy (e.g. `/mimosa-report/`) paging from `#/presenter/12` produces `#/mimosa-report/presenter/13` (or, with the previous `--base ./` workaround, `#/presenter/presenter/13` because the relative `./presenter/13` path resolves against the current route) and Slidev renders its 404 page. The bug affects both `routerMode: history` and `routerMode: hash`, and both the play view and the presenter view.
+
+The upstream fix (PR slidevjs/slidev#2630, "keep slide paths relative to router base") was merged on 2026-07-03 but is **not released on npm yet** (latest as of 2026-07-07 is 52.16.0). When a release newer than 52.16.0 ships, unpin `@slidev/cli` back to `^52.x` (or the latest) and re-test `pnpm run build:pages` end-to-end on a subdirectory deploy, paging through both the play view (`/mimosa-report/#/12` → `#/13`) and the presenter view (`/mimosa-report/#/presenter/12` → `#/presenter/13`) to confirm the regression is gone.
+
+Do **not** switch `build:pages` back to `--base ./`. The relative base relies on the browser resolving `./` against the current document URL, which combined with vue-router's `resolveRelativePath` produces `/presenter/presenter/N` from inside presenter mode. The absolute `--base /mimosa-report/` is what the Slidev hosting docs recommend for GitHub Pages and is what Slidev's own build step uses to write `dist/_redirects`.
 
 ## Source of Truth
 

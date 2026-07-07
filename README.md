@@ -3,6 +3,8 @@
 Slidev deck for the BGRS/SB-2026 presentation about MIMOSA:
 model-independent comparison of transcription factor motif models.
 
+Online version: <https://ubercomrade.github.io/mimosa-report/>.
+
 ## Quick start
 
 ```fish

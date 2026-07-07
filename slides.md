@@ -33,6 +33,11 @@ Anton V. Tsukanov, PhD (Biology) &middot; Victor G. Levitsky, PhD (Biology)
 
 <span class="small">Institute of Cytology and Genetics SB RAS, Novosibirsk, Russia</span>
 
+<div class="title-qr-card">
+  <img src="./assets/mimosa_report_qr.png" alt="QR code linking to the online MIMOSA presentation" />
+  <a href="https://ubercomrade.github.io/mimosa-report/">Online slides</a>
+</div>
+
 <!--
 Good morning. My name is Anton Tsukanov.
 Today I will present MIMOSA, a method for representation-independent comparison of transcription factor motifs.
@@ -49,15 +54,15 @@ layout: two-cols-header
 ::left::
 
 - Transcription factors (TFs) bind specific DNA sites and interact with the transcriptional complex<sup class="cite">1</sup>
-- TFs control gene expression programs.
-- One TF can bind to a range of similar DNA sequences.
-- A **motif** captures sequence variation across these binding sites.<sup class="cite">2</sup>
+- TFs control gene expression programs
+- One TF can bind to a range of similar DNA sequences
+- A **motif** captures sequence variation across these binding sites<sup class="cite">2</sup>
 
 
 ::right::
 
 <Callout>
-Motifs let us predict transcription factor binding sites (TFBSs) in the genome, which makes it possible to study transcription regulation.<sup class="cite">2</sup>
+Motifs let us predict transcription factor binding sites (TFBSs) in the genome, which makes it possible to study transcription regulation<sup class="cite">2</sup>
 </Callout>
 
 <!--
@@ -111,21 +116,21 @@ A PWM is easy to interpret: each position contributes separately to the score of
 
 <CardGrid :columns="3" class="card-grid-size-45-28-28 card-grid-bottom-media">
     <Card title="Dimerization">
-        <p>A partner TF can influence binding affinity at TFBSs.<sup class="cite">6</sup></p>
+        <p>A partner TF can influence binding affinity at TFBSs<sup class="cite">6</sup></p>
         <img class="card-media" src="./assets/dimerization.svg" alt="Dimerization schematic" />
     </Card>
     <Card title="Flanks">
-        <p>Flanking regions can either increase or decrease affinity for the same binding site.<sup class="cite">7</sup></p>
+        <p>Flanking regions can either increase or decrease affinity for the same binding site<sup class="cite">7</sup></p>
         <img class="card-media" src="./assets/context.svg" alt="Flanking sequence context schematic" />
     </Card>
     <Card title="Conformation">
-        <p>Some TFs can bind sites that differ substantially from the canonical motif.<sup class="cite">8</sup></p>
+        <p>Some TFs can bind sites that differ substantially from the canonical motif<sup class="cite">8</sup></p>
         <img class="card-media" src="./assets/conformation.svg" alt="Conformation-dependent binding schematic" />
     </Card>
 </CardGrid>
 
 <Note>
-Models such as BaMM<sup class="cite">9</sup>, Slim<sup class="cite">10</sup> and DIMONT<sup class="cite">11</sup> preserve such dependencies instead of flattening them into a single matrix.
+    Alternative motif models such as BaMM<sup class="cite">9</sup>, Slim<sup class="cite">10</sup> and DIMONT<sup class="cite">11</sup> account for dependencies rather than reducing recognition to independent PWM positions
 </Note>
 
 <!--
@@ -237,7 +242,7 @@ Alternative models, such as BaMM, Slim, and DIMONT, try to keep this information
 
 
 <Note v-click="5" data-id="bottleneck-note">
-  <span v-mark="{ at: 5, type: 'underline', color: '#9a4f48', iterations: 3 }">Most established annotation tools are designed for PWM/PFM motif models, not alternative motif models.</span><sup class="cite">12-14</sup> Non-PWM models often have to be converted before annotation.
+  <span v-mark="{ at: 5, type: 'underline', color: '#9a4f48', iterations: 3 }">Most established annotation tools are designed for PWM/PFM motif models, not alternative motif models</span><sup class="cite">12-14</sup>; non-PWM models often have to be converted before annotation
 </Note>
 
 
@@ -327,7 +332,7 @@ For every shift, MIMOSA computes a similarity score inside the local windows.
   S_{\cos}(x,y)=\frac{x \cdot y}{||x||\,||y||}
   $$
 
-  Compares profile shape.<sup class="cite">16</sup>
+  Compares profile shape<sup class="cite">16</sup>
 
   </Card>
   <Card title="Dice">
@@ -336,13 +341,13 @@ For every shift, MIMOSA computes a similarity score inside the local windows.
   S_{\mathrm{Dice}}(x,y)=\frac{2\sum_i \min(x_i,y_i)}{\sum_i x_i+\sum_i y_i}
   $$
 
-  Compares profile overlap.<sup class="cite">16</sup>
+  Compares profile overlap<sup class="cite">16</sup>
 
   </Card>
 </CardGrid>
 
 <Note>
-Interpretation: a high, statistically significant score indicates similar recognition behavior, not necessarily identical parameters.
+Interpretation: a high, statistically significant score indicates similar recognition behavior, not necessarily identical parameters
 </Note>
 
 <!--
@@ -420,7 +425,7 @@ We compared MIMOSA with Tomtom, STAMP, MACRO-APE, and MoSBAT.
   \mathrm{MRR}=\frac{1}{|Q|}\sum_{q \in Q}\frac{1}{r_q}
   $$
 
-  Mean reciprocal rank: rewards placing the first correct motif as high as possible.
+  Mean reciprocal rank: rewards placing the first correct motif as high as possible
 
   </Card>
   <Card title="Recall@k">
@@ -429,12 +434,12 @@ We compared MIMOSA with Tomtom, STAMP, MACRO-APE, and MoSBAT.
   \mathrm{Recall@}k=\frac{1}{|Q|}\sum_{q \in Q}\mathbf{1}\{r_q \le k\}
   $$
 
-  Fraction of queries where a correct motif appears within the top $k$ results.
+  Fraction of queries where a correct motif appears within the top $k$ results
 
   </Card>
 </CardGrid>
 
-$Q$ is the query motif set; $r_q$ is the rank of the first target motif annotated to the same TF as query $q$.
+$Q$ is the query motif set; $r_q$ is the rank of the first target motif annotated to the same TF as query $q$
 
 <!--
 We used two standard ranking metrics.
@@ -532,7 +537,7 @@ clicks: 4
 </div>
 
 <Note v-click="4">
-MIMOSA provides motif annotation quality comparable to established PWM-oriented tools, while also supporting non-PWM motif models.
+MIMOSA provides motif annotation quality comparable to established PWM-oriented tools, while also supporting non-PWM motif models
 </Note>
 
 <!--
@@ -572,7 +577,7 @@ layout: two-cols-header
 
 ::left::
 
-- _M. musculus_ ATF3 ChIP-seq: **GTRD PEAKS037311**<sup class="cite">20</sup>.
+- _M. musculus_ ATF3 ChIP-seq: **GTRD PEAKS037311**<sup class="cite">20</sup>
 - Top **2,000** MACS2 peaks
 - _de novo_ discovery tools:
     1. STREME
@@ -770,7 +775,7 @@ clicks: 6
 
 
 <Note>
-Different motif models recover related AP-1/CRE-like signals, but represent site heterogeneity differently.
+Different motif models recover related AP-1/CRE-like signals, but represent site heterogeneity differently
 </Note>
 
 <!--
@@ -805,7 +810,7 @@ So one flexible model can cover what is split into two PWM motifs.
 </CardGrid>
 
 <Note>
-By comparing recognition profiles, MIMOSA detects links that are partly lost after converting non-PWM models to PWMs.
+By comparing recognition profiles, MIMOSA detects links that are partly lost after converting non-PWM models to PWMs
 </Note>
 
 <!--
@@ -904,9 +909,9 @@ This supports the interpretation that BaMM integrates both spacer variants in on
 <div class="grid-60 conclusion-grid">
   <div>
     <ol>
-      <li>MIMOSA compares <strong>recognition profiles</strong>, not motif parameters.</li>
-      <li>It achieves retrieval performance close to strong established tools in a HOCOMOCO benchmark.</li>
-      <li>It preserves model-specific recognition behavior, revealing when flexible models cover multiple PWM variants.</li>
+      <li>MIMOSA compares <strong>recognition profiles</strong>, not motif parameters</li>
+      <li>It achieves retrieval performance close to strong established tools in a HOCOMOCO benchmark</li>
+      <li>It preserves model-specific recognition behavior, revealing when flexible models cover multiple PWM variants</li>
     </ol>
     <p><strong>Software:</strong></p>
     <ul>
@@ -926,7 +931,7 @@ This supports the interpretation that BaMM integrates both spacer variants in on
 </div>
 
 <Note>
-This research was funded by the Russian Science Foundation, grant 25-74-00116.
+This research was funded by the Russian Science Foundation, grant 25-74-00116
 </Note>
 
 <!--
@@ -992,10 +997,10 @@ I will move here only if there is time or if there is a specific question.
 
 ## ERR calibration and null
 
-- ERR estimates how often a model produces a score at least this high.<sup class="cite">15</sup>
-- `-log10(ERR)` puts different score scales into one coordinate system.
-- Shuffled HOCOMOCO motifs define empirical background similarity.<sup class="cite">17</sup>
-- FDR controls multiple testing in benchmark and case-study comparisons.
+- ERR estimates how often a model produces a score at least this high<sup class="cite">15</sup>
+- `-log10(ERR)` puts different score scales into one coordinate system
+- Shuffled HOCOMOCO motifs define empirical background similarity<sup class="cite">17</sup>
+- FDR controls multiple testing in benchmark and case-study comparisons
 
 <!--
 Use this slide if someone asks about score calibration or statistical support.
@@ -1016,7 +1021,7 @@ For significance, we used shuffled HOCOMOCO motifs as an empirical null distribu
 />
 
 <Note>
-Different tools rank the full target list differently, even when retrieval accuracy is close.
+Different tools rank the full target list differently, even when retrieval accuracy is close
 </Note>
 
 <!--
